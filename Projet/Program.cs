@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,6 +25,18 @@ class Program{
 
         return File;
     }
+
+    static void Traitement(List<string[]> File){
+        for(int i = 0; i < File.Count; i++){
+            string[] line = File[i];
+            for(int j = 0; j < line.Length; j++){
+                
+            }
+        }
+    }
+
+
+
     public static void Main(){
         List<string[]> File = new List<string[]>();
         File = ReadFile("soc-karate.mtx");

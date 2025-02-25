@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projet
 {
-    internal class Lien
+    public class Lien
     {
         private Noeud depart;
         private Noeud arrivee;

@@ -13,3 +13,18 @@ C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.pdb
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.genruntimeconfig.cache
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0\ref\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0\Projet.exe
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0\Projet.deps.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0\Projet.runtimeconfig.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0\Projet.pdb
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.AssemblyInfoInputs.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.AssemblyInfo.cs
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.csproj.CoreCompileInputs.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.sourcelink.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\refint\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.pdb
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\Projet.genruntimeconfig.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0\ref\Projet.dll

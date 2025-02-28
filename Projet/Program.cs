@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Projet;
 
 
 class Program{
@@ -41,6 +42,6 @@ class Program{
         /* List<string[]> File = new List<string[]>();
         File = ReadFile("soc-karate.mtx");
         Console.WriteLine(File[23]);    */
-        Graphe Test = new Graphe("soc-karate");
+        Graphe Test = new Graphe("soc-karate.mtx");
     }
 }

@@ -28,20 +28,21 @@ namespace Projet
         public Graphe(string filepath){
             if(filepath.Substring(filepath.Length - 4) == ".mtx"){
                 StreamReader SReader = null;
-                List<string[]> File = new List<string[]>();
+                List<string> File = new List<string>();
                 try{
-                    SReader = new StreamReader(filename);
+                    SReader = new StreamReader(filepath);
                     string line;
                     while ((line = SReader.ReadLine()) != null){
                         File.Add(line);
                     }
 
                     for(int i = 0; i < File.Count; i++){
-                        string[] line = File[i];
-                        if(line[0] != "%"){
-                            for(int j = 0; j < line.Length; j++){
-                                Console.WriteLine(line);
-                            }
+                        string ligne = File[i];
+                        if(ligne[0] != '%'){
+                            Console.WriteLine(ligne);
+                            /* for (int j = 0; j < ligne.Length; ++){
+                                
+                            } */
                         }
                     }
                 }catch(Exception e){

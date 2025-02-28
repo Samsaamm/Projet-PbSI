@@ -8,12 +8,12 @@ namespace Projet
 {
     internal class Graphe
     {
-        public string titre;
+        public string titre = null;
         public bool IsOriented;
-        public List<Noeud> noeuds;
-        public List<Lien> liens;
+        public List<Noeud> noeuds = null;
+        public List<Lien> liens = null;
         public Dictionary<Noeud, List<Noeud>> Liste_adj;
-        public int[,] Matrice_adj;
+        public List<List<int>> Matrice_adj = new List<List<int>>();
 
         /// <summary>Constructeur du graphe manuel</summary>
         public Graphe(string titre, bool oriented, List<Noeud> noeuds, List<Lien> liens){
@@ -38,13 +38,17 @@ namespace Projet
 
                     for(int i = 0; i < File.Count; i++){
                         string ligne = File[i];
-                        if(ligne[0] != '%'){
-                            Console.WriteLine(ligne);
-                            /* for (int j = 0; j < ligne.Length; ++){
-                                
-                            } */
+                        if(ligne[0] == '%'){
+                            File.RemoveAt(i);
                         }
                     }
+
+                    for(int i = 1; i < File.Count; i++){
+                        Console.Write(File[i]);
+                        string[] data = File[i].Split(' ');
+                        Matrice_adj[Convert.ToInt32(data[0])][Convert.ToInt32(data[1])] = 1;
+                    }
+                    AfficherMatrice(Matrice_adj);
                 }catch(Exception e){
                     Console.WriteLine(e.ToString());
                 }finally{
@@ -56,6 +60,18 @@ namespace Projet
                 Console.WriteLine("Extension du fichier invalide");
             }
             
+        }
+
+        static void AfficherMatrice(List<List<int>> matrice){
+            int lignes = matrice.Count;
+            int colonnes = matrice[0].Count;
+
+            for (int i = 0; i < lignes; i++){
+                for (int j = 0; j < colonnes; j++){
+                    Console.Write(matrice[i][j] + "\t");
+                }
+                Console.WriteLine();
+            }
         }
 
         /* public void DFS(){

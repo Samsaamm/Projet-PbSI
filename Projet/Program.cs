@@ -38,8 +38,9 @@ class Program{
 
 
     public static void Main(){
-        List<string[]> File = new List<string[]>();
+        /* List<string[]> File = new List<string[]>();
         File = ReadFile("soc-karate.mtx");
-        Console.WriteLine(File[23]);   
+        Console.WriteLine(File[23]);    */
+        Graphe Test = new Graphe("soc-karate");
     }
 }

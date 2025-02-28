@@ -12,7 +12,8 @@ namespace Projet
         public bool IsOriented;
         public List<Noeud> noeuds;
         public List<Lien> liens;
-        public Dictionary<Noeud, List<Noeud>> mat_adj;
+        public Dictionary<Noeud, List<Noeud>> Liste_adj;
+        public int[,] Matrice_adj;
 
         /// <summary>Constructeur du graphe manuel</summary>
         public Graphe(string titre, bool oriented, List<Noeud> noeuds, List<Lien> liens){
@@ -25,29 +26,51 @@ namespace Projet
         /// <summary>Constructeur du graphe a partir d'un fichier source</summary>
         /// <param name="filepath">String, Indique le chemin vers le fichier a ouvrir</param>
         public Graphe(string filepath){
-            try{
+            if(filepath.Substring(filepath.Length - 4) == ".mtx"){
+                StreamReader SReader = null;
+                List<string[]> File = new List<string[]>();
+                try{
+                    SReader = new StreamReader(filename);
+                    string line;
+                    while ((line = SReader.ReadLine()) != null){
+                        File.Add(line);
+                    }
 
-            }catch(exception E){
-        
-            }finally{
-
+                    for(int i = 0; i < File.Count; i++){
+                        string[] line = File[i];
+                        if(line[0] != "%"){
+                            for(int j = 0; j < line.Length; j++){
+                                Console.WriteLine(line);
+                            }
+                        }
+                    }
+                }catch(Exception e){
+                    Console.WriteLine(e.ToString());
+                }finally{
+                    if(SReader != null){
+                        SReader.Close();
+                    }
+                }
+            }else{
+                Console.WriteLine("Extension du fichier invalide");
             }
-        }
-
-        public Dictionary<Noeud, List<Noeud>> Matrice_adj(){
             
         }
 
-        public void DFS(){
+        /* public void DFS(){
 
         }
 
         public void BFS(){
-            
+
+        }
+
+        public void IsConexe(){
+
         }
 
         public void Show(){
 
-        }
+        } */
     }
 }

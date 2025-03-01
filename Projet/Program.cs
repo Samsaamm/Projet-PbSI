@@ -7,14 +7,6 @@ using Projet;
 
 class Program{
     public static void Main(){
-        Noeud n1 = new Noeud(1);
-        Noeud n2 = new Noeud(2);
-        Noeud n3 = new Noeud(3);
-        Graphe Test = new Graphe(false, new List<Noeud>(){n1, n2, n3}, new List<Lien>(){new Lien(n1, n3), new Lien(n2, n3), new Lien(n1, n2)});
-        AfficherMatrice(Test.Matrice_adj);
-        AfficherListeAdj(Test.Liste_adj);
-        Console.WriteLine(Test.IsConnexe());
-        Console.WriteLine(Test.ContientCircuit());
         Graphe TestFile = new Graphe(false, "soc-karate.mtx");
         AfficherMatrice(TestFile.Matrice_adj);
         AfficherListeAdj(TestFile.Liste_adj);

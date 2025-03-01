@@ -47,7 +47,5 @@ namespace Projet
             }
             return s;
         }
-
-
     }
 }

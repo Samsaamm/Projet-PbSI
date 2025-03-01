@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "2Y1Z+fJSvp0=",
-  "success": true,
+  "dgSpecHash": "Ny52iLOWQBQ=",
+  "success": false,
   "projectFilePath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\TestProject1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.applicationinsights\\2.22.0\\microsoft.applicationinsights.2.22.0.nupkg.sha512",
@@ -22,5 +22,15 @@
     "C:\\Users\\samue\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0\\system.diagnostics.diagnosticsource.5.0.0.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Projet is not compatible with net8.0 (.NETCoreApp,Version=v8.0). Project Projet supports: net8.0-windows7.0 (.NETCoreApp,Version=v8.0)",
+      "libraryId": "Projet",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

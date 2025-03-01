@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Projet
 {
-    internal class Graphe: Control
+    internal class Graphe
     {
         public bool IsOriented;
         public List<Noeud> noeuds = new List<Noeud>();

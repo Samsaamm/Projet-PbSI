@@ -1,7 +1,8 @@
+DROP DATABASE IF EXISTS projet_psi;
 CREATE DATABASE Projet_PSI;
 USE Projet_PSI;
 
-CREATE TABLE Utilisateur(
+CREATE TABLE IF NOT EXISTS Utilisateur(
    Id_utilisateur VARCHAR(50),
    Nom VARCHAR(50),
    Prénom VARCHAR(50) NOT NULL,
@@ -12,37 +13,25 @@ CREATE TABLE Utilisateur(
    PRIMARY KEY(Id_utilisateur)
 );
 
-CREATE TABLE Lignemétro(
+CREATE TABLE IF NOT EXISTS Lignemétro(
    Id_ligne VARCHAR(50),
    Num_ligne INT NOT NULL,
    Liste_stations VARCHAR(2000) NOT NULL,
    PRIMARY KEY(Id_ligne)
 );
 
-CREATE TABLE MétroStation(
-   Id_station VARCHAR(50),
+CREATE TABLE IF NOT EXISTS MétroStation(
+   Id_station INT NOT NULL,
    Nom_station VARCHAR(50) NOT NULL,
    Latitude VARCHAR(50) NOT NULL,
    Longitude VARCHAR(50) NOT NULL,
-   Id_ligne VARCHAR(50) NOT NULL,
-   PRIMARY KEY(Id_station),
-   FOREIGN KEY(Id_ligne) REFERENCES Lignemétro(Id_ligne)
+   PRIMARY KEY(Id_station)
 );
 
-CREATE TABLE CheminOptimal(
-   Id_chemin VARCHAR(50),
-   Id_stationdépart VARCHAR(50),
-   Id_stationarrivèe VARCHAR(50),
-   Distance DECIMAL(15,2) NOT NULL,
-   Id_station VARCHAR(50) NOT NULL,
-   PRIMARY KEY(Id_chemin),
-   FOREIGN KEY(Id_station) REFERENCES MétroStation(Id_station)
-);
 
-CREATE TABLE Cuisinier(
+CREATE TABLE IF NOT EXISTS Cuisinier(
    Id_cuisinier VARCHAR(50),
-   Plat VARCHAR(3000) NOT NULL,
-   Id_station VARCHAR(50),
+   Id_station INT NOT NULL,
    Id_utilisateur VARCHAR(50) NOT NULL,
    PRIMARY KEY(Id_cuisinier),
    UNIQUE(Id_utilisateur),
@@ -50,12 +39,13 @@ CREATE TABLE Cuisinier(
    FOREIGN KEY(Id_utilisateur) REFERENCES Utilisateur(Id_utilisateur)
 );
 
-CREATE TABLE Client(
+
+CREATE TABLE IF NOT EXISTS Client(
    Id_client VARCHAR(50),
    Type VARCHAR(50) NOT NULL,
    Nom_entreprise VARCHAR(50),
    Nom_referent VARCHAR(50),
-   Id_station VARCHAR(50),
+   Id_station INT NOT NULL,
    Id_utilisateur VARCHAR(50) NOT NULL,
    PRIMARY KEY(Id_client),
    UNIQUE(Id_utilisateur),
@@ -63,7 +53,7 @@ CREATE TABLE Client(
    FOREIGN KEY(Id_utilisateur) REFERENCES Utilisateur(Id_utilisateur)
 );
 
-CREATE TABLE Plat(
+CREATE TABLE IF NOT EXISTS Plat(
    Id_plat VARCHAR(50),
    Id_cuisinier VARCHAR(50),
    Nom VARCHAR(50) NOT NULL,
@@ -83,28 +73,29 @@ CREATE TABLE Plat(
 
 CREATE TABLE Commande(
    Id_commande VARCHAR(50),
-   Id_client VARCHAR(50),
-   Date__commande DATE NOT NULL,
+   Id_cuisinier VARCHAR(50) NOT NULL,
+   Id_client VARCHAR(50) NOT NULL,
+   Date__commande VARCHAR(50) NOT NULL,
    Prix DECIMAL(15,2) NOT NULL,
    Statut VARCHAR(50),
-   Id_client_1 VARCHAR(50) NOT NULL,
    PRIMARY KEY(Id_commande),
-   FOREIGN KEY(Id_client_1) REFERENCES Client(Id_client)
+   FOREIGN KEY(Id_client) REFERENCES Client(Id_client),
+   FOREIGN KEY(Id_cuisinier) REFERENCES Cuisinier(Id_cuisinier)
 );
 
 CREATE TABLE LigneCommande(
    Id_lignecommande VARCHAR(50),
-   Id_commande VARCHAR(50),
-   Id_plat VARCHAR(50),
    Quantité INT NOT NULL,
    Date_livraison DATE NOT NULL,
    Lieu_livraison_ VARCHAR(50) NOT NULL,
-   Id_commande_1 VARCHAR(50) NOT NULL,
+   Id_plat VARCHAR(50) NOT NULL,
+   Id_commande VARCHAR(50) NOT NULL,
    PRIMARY KEY(Id_lignecommande),
-   FOREIGN KEY(Id_commande_1) REFERENCES Commande(Id_commande)
+   FOREIGN KEY(Id_plat) REFERENCES Plat(Id_plat),
+   FOREIGN KEY(Id_commande) REFERENCES Commande(Id_commande)
 );
 
-CREATE TABLE Livraison(
+CREATE TABLE IF NOT EXISTS Livraison(
    Id_livraison VARCHAR(50),
    Id_cuisinier VARCHAR(50),
    Id_commande VARCHAR(50),
@@ -118,7 +109,7 @@ CREATE TABLE Livraison(
    FOREIGN KEY(Id_commande_1) REFERENCES Commande(Id_commande)
 );
 
-CREATE TABLE HistoriqueTransactions(
+CREATE TABLE IF NOT EXISTS HistoriqueTransactions(
    Id_transaction VARCHAR(50),
    Id_cuisinier VARCHAR(50),
    Id_client VARCHAR(50),
@@ -133,7 +124,7 @@ CREATE TABLE HistoriqueTransactions(
    FOREIGN KEY(Id_client_1) REFERENCES Client(Id_client)
 );
 
-CREATE TABLE Avis(
+CREATE TABLE IF NOT EXISTS Avis(
    Id_avis VARCHAR(50),
    Id_client VARCHAR(50),
    Id_cuisinier VARCHAR(50),
@@ -147,7 +138,7 @@ CREATE TABLE Avis(
    FOREIGN KEY(Id_cuisinier_1) REFERENCES Cuisinier(Id_cuisinier)
 );
 
-CREATE TABLE Contenir(
+CREATE TABLE IF NOT EXISTS Contenir(
    Id_plat VARCHAR(50),
    Id_lignecommande VARCHAR(50),
    PRIMARY KEY(Id_plat, Id_lignecommande),
@@ -155,13 +146,24 @@ CREATE TABLE Contenir(
    FOREIGN KEY(Id_lignecommande) REFERENCES LigneCommande(Id_lignecommande)
 );
 
-CREATE TABLE Effectuer(
+CREATE TABLE IF NOT EXISTS Effectuer(
    Id_cuisinier VARCHAR(50),
    Id_livraison VARCHAR(50),
    PRIMARY KEY(Id_cuisinier, Id_livraison),
    FOREIGN KEY(Id_cuisinier) REFERENCES Cuisinier(Id_cuisinier),
    FOREIGN KEY(Id_livraison) REFERENCES Livraison(Id_livraison)
 );
+
+INSERT INTO MétroStation VALUES (0, "République", "1","1");
+INSERT INTO Utilisateur VALUES (0, "Dupond", "Marie", "30 Rue de la République, 75011 Paris", 1234567890, "Mdupond@gmail.com", "MotDePasse");
+INSERT INTO Cuisinier VALUES (1, 0, 0);
+
+INSERT INTO MétroStation VALUES (1, "Cardinet", "2","2");
+INSERT INTO Utilisateur VALUES (1, "Durand", "Medhy", "15 Rue Cardinet, 75017 Paris", 1234567890, "Mdurand@gmail.com", "MotDePasse");
+INSERT INTO Client (Id_client, Type, Id_station, Id_utilisateur) VALUES (1, "Particulier", 1, 1);
+
+INSERT INTO Commande VALUES (1, 1, 1,"01/01/25", 10, "En cours");
+INSERT INTO Commande VALUES (2, 1, 1,"02/02/25", 5, "En cours");
 
 
 

@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 
 namespace Projet
 {
-    public class Lien
+    public class Lien<T>
     {
-        private Noeud depart;
-        private Noeud arrivee;
+        private Noeud<T> depart;
+        private Noeud<T> arrivee;
 
         /// <summary>
         /// Constructeur de la classe
         /// </summary>
         /// <param name="depart">noeud de départ</param>
         /// <param name="arrivee">noeud d'arrivée</param>
-        public Lien (Noeud depart, Noeud arrivee)
+        public Lien (Noeud<T> depart, Noeud<T> arrivee)
         {
             this.depart = depart;
             this.arrivee = arrivee;
         }
 
-        public Noeud Depart
+        public Noeud<T> Depart
         {
             get { return depart; }
             set { this.depart = value; }
         }
 
-        public Noeud Arrivee
+        public Noeud<T> Arrivee
         {
             get { return arrivee; }
             set { arrivee = value; }

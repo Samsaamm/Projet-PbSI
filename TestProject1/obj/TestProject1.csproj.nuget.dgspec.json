@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\TestProject1\\TestProject1.csproj": {}
+    "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\TestProject1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Projet.csproj": {
+    "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Projet.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj",
         "projectName": "Projet",
-        "projectPath": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Projet.csproj",
-        "packagesPath": "C:\\Users\\cash\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\obj\\",
+        "projectPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj",
+        "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\cash\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,8 +39,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -68,25 +63,21 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\TestProject1\\TestProject1.csproj": {
+    "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\TestProject1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\TestProject1\\TestProject1.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\TestProject1.csproj",
         "projectName": "TestProject1",
-        "projectPath": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\TestProject1\\TestProject1.csproj",
-        "packagesPath": "C:\\Users\\cash\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\TestProject1\\obj\\",
+        "projectPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\TestProject1.csproj",
+        "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\TestProject1\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\cash\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -100,8 +91,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Projet.csproj": {
-                "projectPath": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Projet.csproj"
+              "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj": {
+                "projectPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj"
               }
             }
           }
@@ -115,12 +106,21 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "MSTest": {
+              "target": "Package",
+              "version": "[3.6.4, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.12.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -132,7 +132,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -10,8 +10,6 @@ SELECT * FROM Plat WHERE Prix < 20; -- on récupère les plats avec un prix inf�
 
 SELECT * FROM Commande WHERE Date__commande < '2024-12-06' ; -- on récupère les commandes passées après 2024
 
-SELECT * FROM MétroStation WHERE Id_ligne = 'M5'; -- on récupère les stations présentes sur la ligne du métro 5;
-
 SELECT * FROM Avis WHERE Note = 5; -- on récupère les avis avec la note de 5
 
 SELECT * FROM Plat WHERE Régime = 'Végétarien'; -- on récupère la liste des plats végétariens;

@@ -10,6 +10,7 @@ namespace Projet
     {
         private Noeud<T> depart;
         private Noeud<T> arrivee;
+        private int poids;
 
         /// <summary>
         /// Constructeur de la classe
@@ -32,6 +33,10 @@ namespace Projet
         {
             get { return arrivee; }
             set { arrivee = value; }
+        }
+        public int Poids
+        {
+            get { return poids; }
         }
 
         /// <summary>

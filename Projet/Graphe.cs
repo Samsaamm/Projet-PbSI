@@ -200,5 +200,57 @@ namespace Projet
             bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
             Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
         }
+
+        
+        public Dictionary<Noeud<T>, int> Dijkstra(Noeud<T> source)
+        {
+            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
+            Dictionary<Noeud<T>, Noeud<T>> precedents = new Dictionary<Noeud<T>, Noeud<T>>();
+            HashSet<Noeud<T>> non_visites = new HashSet<Noeud<T>>(noeuds);
+
+            for (int i = 0; i < noeuds.Count; i++)
+            {
+                distances[noeuds[i]] = int.MaxValue;
+                precedents[noeuds[i]] = null;
+            }
+            distances[source] = 0;
+            while(non_visites.Count > 0)
+            {
+                Noeud<T> noeudActuel = null;
+                int distanceMin = int.MaxValue;
+                List<Noeud<T>> non_visites_liste = non_visites.ToList();
+                for (int i = 0; i < non_visites_liste.Count; i++)
+                {
+                    Noeud<T> noeud = non_visites_liste[i];
+                    if (distances[noeud] < distanceMin)
+                    {
+                        distanceMin = distances[noeud];
+                        noeudActuel = noeud;
+                    }
+                }
+                if (noeudActuel != null)
+                {
+                    non_visites.Remove(noeudActuel);
+
+                    for (int i = 0; i < liens.Count; i++)
+                    {
+                        if (liens[i].Depart.Equals(noeudActuel))
+                        {
+                            Noeud<T> voisinNoeud = liens[i].Arrivee;
+                            if (non_visites.Contains(voisinNoeud))
+                            {
+                                int nouvelleDistance = distances[noeudActuel] + liens[i].Poids;
+                                if (nouvelleDistance < distances[voisinNoeud])
+                                {
+                                    distances[voisinNoeud] = nouvelleDistance;
+                                    precedents[voisinNoeud] = noeudActuel;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return distances;
+        }
     }
 }

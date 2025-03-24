@@ -7,18 +7,18 @@ using System.Diagnostics;
 
 namespace Projet
 {
-    internal class Graphe
+    internal class Graphe<T>
     {
         public bool IsOriented;
-        public List<Noeud> noeuds = new List<Noeud>();
-        public List<Lien> liens = new List<Lien>();
+        public List<Noeud<T>> noeuds = new List<Noeud<T>>();
+        public List<Lien<T>> liens = new List<Lien<T>>();
         public Dictionary<int, List<int>> liste_adj = new Dictionary<int, List<int>>();
         public int[,] matrice_adj = new int[0,0];
 
 
 
         /// <summary>Constructeur du graphe manuel</summary>/// 
-        public Graphe(bool oriented, List<Noeud> noeuds, List<Lien> liens){
+        public Graphe(bool oriented, List<Noeud<T>> noeuds, List<Lien<T>> liens){
             IsOriented = oriented;
             this.noeuds = noeuds;
             this.liens = liens;
@@ -49,12 +49,12 @@ namespace Projet
                     }
 
                     for(int i = 0; i < Convert.ToInt32(File[0].Split(' ')[0]); i++){
-                        noeuds.Add(new Noeud(i+1));
+                        noeuds.Add(new Noeud<T>(i+1));
                     }    
 
                     for(int i = 1; i < File.Count; i++){
                         string[] data = File[i].Split(' ');
-                        liens.Add(new Lien(noeuds[Convert.ToInt32(data[0]) - 1], noeuds[Convert.ToInt32(data[1]) - 1]));
+                        liens.Add(new Lien<T>(noeuds[Convert.ToInt32(data[0]) - 1], noeuds[Convert.ToInt32(data[1]) - 1]));
                     }
 
                     CreatMatAdj(noeuds, liens);
@@ -81,7 +81,7 @@ namespace Projet
             get { return liste_adj;}
         }
 
-        public void CreatMatAdj(List<Noeud> node, List<Lien> link){
+        public void CreatMatAdj(List<Noeud<T>> node, List<Lien<T>> link){
             matrice_adj = new int[node.Count, node.Count];
             for(int i =0; i < link.Count; i++){
                 matrice_adj[link[i].Depart.Numnoeud - 1, link[i].Arrivee.Numnoeud - 1] = 1;
@@ -101,7 +101,7 @@ namespace Projet
             }
         }
 
-        public HashSet<Noeud> DFS(Noeud noeud, HashSet<Noeud> visites){
+        public HashSet<Noeud<T>> DFS(Noeud<T> noeud, HashSet<Noeud<T>> visites){
             if(visites.Contains(noeud)){
                 return null;
             } 
@@ -114,19 +114,19 @@ namespace Projet
 
         public bool IsConnexe(){
             if (liste_adj.Count == 0) return true;
-            HashSet<Noeud> visites = new HashSet<Noeud>();
+            HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             DFS(noeuds[liste_adj.Keys.First()], visites);
             return visites.Count == liste_adj.Count;
         }
     
-        public HashSet<Noeud> BFS(Noeud depart){
-            HashSet<Noeud> visites = new HashSet<Noeud>();
-            Queue<Noeud> file = new Queue<Noeud>();
+        public HashSet<Noeud<T>> BFS(Noeud<T> depart){
+            HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
+            Queue<Noeud<T>> file = new Queue<Noeud<T>>();
             file.Enqueue(depart);
             visites.Add(depart);
 
             while(file.Count > 0){
-                Noeud noeud = file.Dequeue();
+                Noeud<T> noeud = file.Dequeue();
                 foreach(var voisin in liste_adj[noeud.Numnoeud]){
                     if(!visites.Contains(noeuds[voisin - 1])){
                         visites.Add(noeuds[voisin - 1]);
@@ -138,7 +138,7 @@ namespace Projet
         }
 
         public bool ContientCircuit(){
-            HashSet<Noeud> visites = new HashSet<Noeud>();
+            HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             bool res = false;
             foreach(var noeud in liste_adj.Keys){
                 if (!visites.Contains(noeuds[noeud - 1]) && DetecterCircuit(noeuds[noeud - 1], null, visites))
@@ -147,7 +147,7 @@ namespace Projet
             return res;
         }
 
-        public bool DetecterCircuit(Noeud noeud, Noeud parent, HashSet<Noeud> visites){
+        public bool DetecterCircuit(Noeud<T> noeud, Noeud<T> parent, HashSet<Noeud<T>> visites){
             visites.Add(noeud);
             bool res = false;
             foreach(var voisin in liste_adj[noeud.Numnoeud]){

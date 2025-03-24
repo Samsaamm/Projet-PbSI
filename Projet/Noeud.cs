@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Projet
 {
-    public class Noeud
+    public class Noeud<T>
     {
         private int numnoeud;
-        private List<Noeud> voisins;
+        private List<T> voisins;
 
         /// <summary>
         /// Constructeur de la classe
@@ -18,7 +18,7 @@ namespace Projet
         public Noeud (int numnoeud)
         {
             this.numnoeud = numnoeud;
-            this.voisins = new List<Noeud>();
+            this.voisins = new List<T>();
         }
 
 
@@ -28,7 +28,7 @@ namespace Projet
             set { this.numnoeud = value; }
         }
 
-        public List<Noeud> Voisins
+        public List<T> Voisins
         {
             get { return voisins; }
             set { voisins = value; }
@@ -41,7 +41,7 @@ namespace Projet
         public string toString()
         {
             string s = "Noeud numéro : " + numnoeud + "\nliste des noeuds voisins : ";
-            foreach (Noeud n in voisins)
+            foreach (T n in voisins)
             {
                 s += n.ToString() + "\n";
             }

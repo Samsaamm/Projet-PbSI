@@ -208,7 +208,7 @@ namespace Projet
             Dictionary<Noeud<T>, Noeud<T>> precedents = new Dictionary<Noeud<T>, Noeud<T>>();
             HashSet<Noeud<T>> non_visites = new HashSet<Noeud<T>>(noeuds);
 
-            for (int i = 0; i < noeuds.Count; i++)
+            for(int i = 0; i < noeuds.Count; i++)
             {
                 distances[noeuds[i]] = int.MaxValue;
                 precedents[noeuds[i]] = null;
@@ -219,38 +219,98 @@ namespace Projet
                 Noeud<T> noeudActuel = null;
                 int distanceMin = int.MaxValue;
                 List<Noeud<T>> non_visites_liste = non_visites.ToList();
-                for (int i = 0; i < non_visites_liste.Count; i++)
+                for(int i = 0; i < non_visites_liste.Count; i++)
                 {
                     Noeud<T> noeud = non_visites_liste[i];
-                    if (distances[noeud] < distanceMin)
+                    if(distances[noeud] < distanceMin)
                     {
                         distanceMin = distances[noeud];
                         noeudActuel = noeud;
                     }
                 }
-                if (noeudActuel != null)
+                if(noeudActuel != null)
                 {
                     non_visites.Remove(noeudActuel);
 
-                    for (int i = 0; i < liens.Count; i++)
+                    for(int i = 0; i < liens.Count; i++)
                     {
-                        if (liens[i].Depart.Equals(noeudActuel))
+                        if(liens[i].Depart.Equals(noeudActuel))
                         {
                             Noeud<T> voisinNoeud = liens[i].Arrivee;
-                            if (non_visites.Contains(voisinNoeud))
+                            if(liens[i].Poids > 0)
                             {
                                 int nouvelleDistance = distances[noeudActuel] + liens[i].Poids;
-                                if (nouvelleDistance < distances[voisinNoeud])
+                                if(nouvelleDistance < distances[voisinNoeud])
                                 {
                                     distances[voisinNoeud] = nouvelleDistance;
                                     precedents[voisinNoeud] = noeudActuel;
                                 }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Erreur, tout les poids doivent etre positif");
                             }
                         }
                     }
                 }
             }
             return distances;
+        }
+
+
+        public Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> FloydWarshall()
+        {
+            int count  = noeuds.Count;
+            int[,] distance = new int[count, count];
+            for(int i = 0; i < count; i++)
+            {
+                for(int j = 0; j < count; j++)
+                {
+                    if(i == j)
+                    {
+                        distance[i, j] = 0;
+                    }
+                    else
+                    {
+                        distance[i, j] = int.MaxValue;
+                    }                       
+                }
+            }
+            for(int k = 0; k < liens.Count; k++)
+            {
+                int departIndex = liens[k].Depart.Numnoeud - 1;
+                int arriveeIndex = liens[k].Arrivee.Numnoeud - 1;
+                distance[departIndex, arriveeIndex] = liens[k].Poids;
+                if(IsOriented == false)
+                {
+                    distance[arriveeIndex, departIndex] = liens[k].Poids;
+                }
+            }
+            for(int l = 0; l < count; l++)
+            {
+                for(int m = 0; m < count; m++)
+                {
+                    for(int o= 0; o < count; o++)
+                    {
+                        if(distance[m, o] > distance[m, l] + distance[m, o])
+                        {
+                            distance[m, o] = distance[m, l] + distance[m, o];
+                        }
+                    }
+                }
+            }
+            Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> result = new Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>>();
+            for(int p = 0; p < count; p++)
+            {
+                var noeudSource = noeuds[p];
+                result[noeudSource] = new Dictionary<Noeud<T>, int>();
+                for(int q = 0; q < count; q++)
+                {
+                    var noeudDestination = noeuds[q];
+                    result[noeudSource][noeudDestination] = distance[p, q];
+                }
+            }
+            return result;
         }
     }
 }

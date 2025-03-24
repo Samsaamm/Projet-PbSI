@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
@@ -16,7 +17,6 @@ namespace Projet
         public int[,] matrice_adj = new int[0,0];
 
 
-
         /// <summary>Constructeur du graphe manuel</summary>/// 
         public Graphe(bool oriented, List<Noeud<T>> noeuds, List<Lien<T>> liens){
             IsOriented = oriented;
@@ -25,7 +25,6 @@ namespace Projet
             CreatMatAdj(noeuds, liens);
             CreateListAdj();
         }
-
 
         /// <summary>Constructeur du graphe a partir d'un fichier source</summary>
         /// <param name="filepath">String, Indique le chemin vers le fichier a ouvrir</param>
@@ -68,11 +67,14 @@ namespace Projet
                         SReader.Close();
                     }
                 }
+            }else if(filepath.Substring(filepath.Length - 5) == ".xlsx"){
+
             }else{
                 Console.WriteLine("Extension du fichier invalide");
             }
         }
 
+        #region Attribut
         public int[,] Matrice_adj{
             get { return matrice_adj; }
         }
@@ -80,12 +82,15 @@ namespace Projet
         public Dictionary<int, List<int>> Liste_adj{
             get { return liste_adj;}
         }
+        #endregion
 
         public void CreatMatAdj(List<Noeud<T>> node, List<Lien<T>> link){
             matrice_adj = new int[node.Count, node.Count];
             for(int i =0; i < link.Count; i++){
                 matrice_adj[link[i].Depart.Numnoeud - 1, link[i].Arrivee.Numnoeud - 1] = 1;
-                matrice_adj[link[i].Arrivee.Numnoeud - 1, link[i].Depart.Numnoeud - 1] = 1;
+                if(!IsOriented){
+                    matrice_adj[link[i].Arrivee.Numnoeud - 1, link[i].Depart.Numnoeud - 1] = 1;
+                }
             }
         }
 
@@ -112,13 +117,6 @@ namespace Projet
             return visites;
         }
 
-        public bool IsConnexe(){
-            if (liste_adj.Count == 0) return true;
-            HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
-            DFS(noeuds[liste_adj.Keys.First()], visites);
-            return visites.Count == liste_adj.Count;
-        }
-    
         public HashSet<Noeud<T>> BFS(Noeud<T> depart){
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             Queue<Noeud<T>> file = new Queue<Noeud<T>>();
@@ -136,6 +134,14 @@ namespace Projet
             }
             return visites;
         }
+
+        public bool IsConnexe(){
+            if (liste_adj.Count == 0) return true;
+            HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
+            DFS(noeuds[liste_adj.Keys.First()], visites);
+            return visites.Count == liste_adj.Count;
+        }
+    
 
         public bool ContientCircuit(){
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
@@ -162,6 +168,8 @@ namespace Projet
             return res;
         }
     
+
+        #region Graphique
         public void DrawGraphe(int width = 1920, int height = 1080){
             Bitmap bitmap = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -175,20 +183,23 @@ namespace Projet
                 Dictionary<int, Point> positions = new Dictionary<int, Point>();
 
                 foreach (var noeud in liste_adj.Keys){
-                    int x = rand.Next(50, width - 50);
-                    int y = rand.Next(50, height - 50);
+                    int x = rand.Next(100, width - 100);
+                    int y = rand.Next(100, height - 100);
                     positions[noeud] = new Point(x, y);
                 }
 
                 foreach (var noeud in liste_adj.Keys){
                     foreach (var voisin in liste_adj[noeud]){
                         if (positions.ContainsKey(voisin)){
-                            g.DrawLine(pen, positions[noeud], positions[voisin]);
+                            if(IsOriented){
+                                DrawArrow(g, pen, positions[noeud], positions[voisin]);
+                            }else{
+                                g.DrawLine(pen, positions[noeud], positions[voisin]);
+                            }
                         }
                     }
                 }
 
-                // Dessin des nœuds
                 foreach (var noeud in liste_adj.Keys){
                     Point pos = positions[noeud];
                     g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
@@ -201,6 +212,16 @@ namespace Projet
             Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
         }
 
+        /// <summary>
+        /// Dessine une flèche entre deux points
+        /// </summary>
+        private void DrawArrow(Graphics g, Pen pen, Point start, Point end)
+        {
+            AdjustableArrowCap arrowCap = new AdjustableArrowCap(5, 10);
+            pen.CustomEndCap = arrowCap;
+            g.DrawLine(pen, start, end);
+        }
+        #endregion
         
         public Dictionary<Noeud<T>, int> Dijkstra(Noeud<T> source)
         {
@@ -311,6 +332,46 @@ namespace Projet
                 }
             }
             return result;
+
+        public Dictionary<Noeud<T>, int> BellmanFord(Noeud<T> depart)
+        {
+            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
+
+            foreach (Noeud<T> n in noeuds)
+            {
+                distances[n] = int.MaxValue;
+            }
+            distances[depart] = 0;
+
+            for(int i=0; i<noeuds.Count-1; i++)
+            {
+                foreach (Lien<T> l in liens)
+                {
+                    Noeud<T> Dep = l.Depart;
+                    Noeud<T> Arr = l.Arrivee;
+
+                    if (distances[Dep] != int.MaxValue && distances[Dep] +l.Poids < distances[Arr])
+                    {
+                        distances[Arr]=distances[Dep]+1;
+                    }
+                }
+            }
+
+            foreach (var lien in liens)
+            {
+                Noeud<T> Dep = lien.Depart;
+                Noeud<T> Arr = lien.Arrivee;
+
+                if (distances[Dep] != int.MaxValue && distances[Dep] + lien.Poids < distances[Arr])
+                {
+                    Console.WriteLine("Le graphe contient un cycle absorbant");
+                    return null;
+                }
+            }
+
+            return distances;
+
+
         }
     }
 }

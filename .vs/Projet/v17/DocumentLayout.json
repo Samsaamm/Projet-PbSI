@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|solutionrelative:projet\\graphe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|c:\\users\\cash\\documents\\github\\projet-pbsi\\projet\\noeud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|solutionrelative:projet\\noeud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|c:\\users\\cash\\documents\\github\\projet-pbsi\\projet\\lien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|solutionrelative:projet\\lien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|c:\\users\\cash\\documents\\github\\projet-pbsi\\projet\\noeud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|solutionrelative:projet\\noeud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{028CA8F2-13D5-46BB-9F33-E5BA576521D8}|Projet\\Projet.csproj|c:\\users\\cash\\documents\\github\\projet-pbsi\\projet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -106,38 +106,37 @@
               "Title": "Graphe.cs",
               "DocumentMoniker": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Graphe.cs",
               "RelativeDocumentMoniker": "Projet\\Graphe.cs",
-              "ToolTip": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Graphe.cs*",
-              "RelativeToolTip": "Projet\\Graphe.cs*",
-              "ViewState": "AgIAAMgAAAAAAAAAAAAAAMsAAAAIAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Graphe.cs",
+              "RelativeToolTip": "Projet\\Graphe.cs",
+              "ViewState": "AgIAABIBAAAAAAAAAAAuwBwBAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-01T10:13:30.857Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Lien.cs",
               "DocumentMoniker": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Lien.cs",
               "RelativeDocumentMoniker": "Projet\\Lien.cs",
               "ToolTip": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Lien.cs",
               "RelativeToolTip": "Projet\\Lien.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAC8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-01T10:13:13.645Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Noeud.cs",
               "DocumentMoniker": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Noeud.cs",
               "RelativeDocumentMoniker": "Projet\\Noeud.cs",
-              "ToolTip": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Noeud.cs*",
-              "RelativeToolTip": "Projet\\Noeud.cs*",
+              "ToolTip": "C:\\Users\\cash\\Documents\\GitHub\\Projet-PbSI\\Projet\\Noeud.cs",
+              "RelativeToolTip": "Projet\\Noeud.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAmwAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-01T10:12:51.745Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-01T10:12:51.745Z"
             },
             {
               "$type": "Document",
@@ -149,8 +148,7 @@
               "RelativeToolTip": "Projet\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-01T10:12:02.544Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-01T10:12:02.544Z"
             },
             {
               "$type": "Document",

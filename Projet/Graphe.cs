@@ -252,5 +252,46 @@ namespace Projet
             }
             return distances;
         }
+
+        public Dictionary<Noeud<T>, int> BellmanFord(Noeud<T> depart)
+        {
+            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
+
+            foreach (Noeud<T> n in noeuds)
+            {
+                distances[n] = int.MaxValue;
+            }
+            distances[depart] = 0;
+
+            for(int i=0; i<noeuds.Count-1; i++)
+            {
+                foreach (Lien<T> l in liens)
+                {
+                    Noeud<T> Dep = l.Depart;
+                    Noeud<T> Arr = l.Arrivee;
+
+                    if (distances[Dep] != int.MaxValue && distances[Dep] +l.Poids < distances[Arr])
+                    {
+                        distances[Arr]=distances[Dep]+1;
+                    }
+                }
+            }
+
+            foreach (var lien in liens)
+            {
+                Noeud<T> Dep = lien.Depart;
+                Noeud<T> Arr = lien.Arrivee;
+
+                if (distances[Dep] != int.MaxValue && distances[Dep] + lien.Poids < distances[Arr])
+                {
+                    Console.WriteLine("Le graphe contient un cycle absorbant");
+                    return null;
+                }
+            }
+
+            return distances;
+
+
+        }
     }
 }

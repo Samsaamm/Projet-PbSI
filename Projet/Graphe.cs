@@ -200,6 +200,8 @@ namespace Projet
             bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
             Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
         }
+
+        
         public Dictionary<Noeud<T>, int> Dijkstra(Noeud<T> source)
         {
             Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();

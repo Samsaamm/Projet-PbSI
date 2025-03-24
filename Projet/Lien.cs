@@ -34,6 +34,10 @@ namespace Projet
             get { return arrivee; }
             set { arrivee = value; }
         }
+        public int Poids
+        {
+            get { return poids; }
+        }
 
         /// <summary>
         /// Affichage des caractéristiques d'un lien

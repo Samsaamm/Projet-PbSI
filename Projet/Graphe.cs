@@ -222,5 +222,97 @@ namespace Projet
             g.DrawLine(pen, start, end);
         }
         #endregion
+        
+        public Dictionary<Noeud<T>, int> Dijkstra(Noeud<T> source)
+        {
+            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
+            Dictionary<Noeud<T>, Noeud<T>> precedents = new Dictionary<Noeud<T>, Noeud<T>>();
+            HashSet<Noeud<T>> non_visites = new HashSet<Noeud<T>>(noeuds);
+
+            for (int i = 0; i < noeuds.Count; i++)
+            {
+                distances[noeuds[i]] = int.MaxValue;
+                precedents[noeuds[i]] = null;
+            }
+            distances[source] = 0;
+            while(non_visites.Count > 0)
+            {
+                Noeud<T> noeudActuel = null;
+                int distanceMin = int.MaxValue;
+                List<Noeud<T>> non_visites_liste = non_visites.ToList();
+                for (int i = 0; i < non_visites_liste.Count; i++)
+                {
+                    Noeud<T> noeud = non_visites_liste[i];
+                    if (distances[noeud] < distanceMin)
+                    {
+                        distanceMin = distances[noeud];
+                        noeudActuel = noeud;
+                    }
+                }
+                if (noeudActuel != null)
+                {
+                    non_visites.Remove(noeudActuel);
+
+                    for (int i = 0; i < liens.Count; i++)
+                    {
+                        if (liens[i].Depart.Equals(noeudActuel))
+                        {
+                            Noeud<T> voisinNoeud = liens[i].Arrivee;
+                            if (non_visites.Contains(voisinNoeud))
+                            {
+                                int nouvelleDistance = distances[noeudActuel] + liens[i].Poids;
+                                if (nouvelleDistance < distances[voisinNoeud])
+                                {
+                                    distances[voisinNoeud] = nouvelleDistance;
+                                    precedents[voisinNoeud] = noeudActuel;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return distances;
+        }
+
+        public Dictionary<Noeud<T>, int> BellmanFord(Noeud<T> depart)
+        {
+            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
+
+            foreach (Noeud<T> n in noeuds)
+            {
+                distances[n] = int.MaxValue;
+            }
+            distances[depart] = 0;
+
+            for(int i=0; i<noeuds.Count-1; i++)
+            {
+                foreach (Lien<T> l in liens)
+                {
+                    Noeud<T> Dep = l.Depart;
+                    Noeud<T> Arr = l.Arrivee;
+
+                    if (distances[Dep] != int.MaxValue && distances[Dep] +l.Poids < distances[Arr])
+                    {
+                        distances[Arr]=distances[Dep]+1;
+                    }
+                }
+            }
+
+            foreach (var lien in liens)
+            {
+                Noeud<T> Dep = lien.Depart;
+                Noeud<T> Arr = lien.Arrivee;
+
+                if (distances[Dep] != int.MaxValue && distances[Dep] + lien.Poids < distances[Arr])
+                {
+                    Console.WriteLine("Le graphe contient un cycle absorbant");
+                    return null;
+                }
+            }
+
+            return distances;
+
+
+        }
     }
 }

@@ -13,3 +13,18 @@ C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.pdb
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.genruntimeconfig.cache
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0-windows\ref\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.exe
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.deps.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.runtimeconfig.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.pdb
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfoInputs.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfo.cs
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.CoreCompileInputs.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.sourcelink.json
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\refint\Projet.dll
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.pdb
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.genruntimeconfig.cache
+C:\Users\cash\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\ref\Projet.dll

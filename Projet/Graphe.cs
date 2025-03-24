@@ -36,7 +36,11 @@ namespace Projet
                 List<string> File = new List<string>();
                 try{
                     SReader = new StreamReader(filepath);
+<<<<<<< Updated upstream
                     string line;
+=======
+                    string[] line;
+>>>>>>> Stashed changes
                     while ((line = SReader.ReadLine()) != null){
                         File.Add(line);
                     }

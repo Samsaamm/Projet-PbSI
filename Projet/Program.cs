@@ -7,7 +7,11 @@ using Projet;
 
 class Program{
     public static void Main(){
-        Graphe TestFile = new Graphe(false, "soc-karate.mtx");
+        /* Graphe<int> TestFile = new Graphe<int>(false, "soc-karate.mtx"); */
+        Noeud<int> n1 = new Noeud<int>(1);
+        Noeud<int> n2 = new Noeud<int>(2);
+        Noeud<int> n3 = new Noeud<int>(3);
+        Graphe<int> TestFile = new Graphe<int>(true, new List<Noeud<int>>{n1,n2,n3}, new List<Lien<int>>{new Lien<int>(n1, n2), new Lien<int>(n2, n3)});
         AfficherMatrice(TestFile.Matrice_adj);
         AfficherListeAdj(TestFile.Liste_adj);
         Console.WriteLine(TestFile.IsConnexe());

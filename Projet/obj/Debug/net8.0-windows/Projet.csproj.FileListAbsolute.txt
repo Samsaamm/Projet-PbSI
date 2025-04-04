@@ -42,3 +42,10 @@ C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.IO.RecyclableMemoryStream.dll
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.AssemblyReference.cache
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.Up2Date
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\ZstdNet.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\BouncyCastle.Crypto.dll

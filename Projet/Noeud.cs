@@ -1,51 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices.Marshalling;
 
-namespace Projet
-{
-    public class Noeud<T>
-    {
-        private int numnoeud;
-        private List<T> voisins;
-
-        /// <summary>
-        /// Constructeur de la classe
-        /// </summary>
-        /// <param name="numnoeud">indique le numéro du noeud</param>
-        public Noeud (int numnoeud)
-        {
-            this.numnoeud = numnoeud;
-            this.voisins = new List<T>();
-        }
-
-
-        public int Numnoeud
-        {
-            get { return numnoeud; }
-            set { this.numnoeud = value; }
-        }
-
-        public List<T> Voisins
-        {
-            get { return voisins; }
-            set { voisins = value; }
-        }
+namespace Projet{
+    public class Noeud<T>{
+        private int idNoeud;
+        private T valeurNoeud;
+        private double coX;
+        private double coY;
 
         /// <summary>
-        /// Affiche les caractéristiques d'un noeud
+        /// Constructeur du noeud sans coordonnée predefinie
         /// </summary>
-        /// <returns>les caractéristiques d'un noeud avec sa liste de voisins</returns>
-        public string toString()
-        {
-            string s = "Noeud numéro : " + numnoeud + "\nliste des noeuds voisins : ";
-            foreach (T n in voisins)
-            {
-                s += n.ToString() + "\n";
+        /// <param name="Id">id du neoud</param>
+        /// <param name="valeur">valeur du noeud</param>
+        public Noeud(int Id, T valeur){
+            this.idNoeud = Id;
+            this.valeurNoeud = valeur;
+            Random rand = new Random();
+            coX = rand.Next(20, 70);
+            coY = rand.Next(0, 10);
+        }
+
+        
+        /// <summary>
+        /// Constructeur du noeud avec coordonnée predefinie
+        /// </summary>
+        /// <param name="Id">id du noeud</param>
+        /// <param name="valeur">valeur du noeud</param>
+        /// <param name="X">coordonnée X</param>
+        /// <param name="Y">coordonnée Y</param>
+        public Noeud(int Id, T valeur, double X, double Y){
+            this.idNoeud = Id;
+            this.valeurNoeud = valeur;
+            this.coX = X;
+            this.coY = Y;
+        }
+
+        public int IdNoeud{
+            get{ return this.idNoeud;}
+            set{ this.idNoeud = value;}
+        }
+
+        public T ValeurNoeud{
+            get{ return this.valeurNoeud;}
+        }
+
+        public double CoX{
+            get{ return this.coX;}
+            set{ this.coX = value;}
+        }
+
+        public double CoY{
+            get{ return this.coY;}
+            set{ this.coY = value;}
+        }
+
+        public bool Equals(Noeud<T> n2){
+            bool res = false;
+            if(Convert.ToString(this.valeurNoeud) == Convert.ToString(n2.valeurNoeud)){
+                res = true;
             }
-            return s;
+            return res;
+        }
+
+        public override string ToString()
+        {
+            return $"Noeud({idNoeud})";
         }
     }
 }

@@ -3,36 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Projet;
+using System.Drawing;
+
+namespace Projet{
+    class Program{
+        public static void Main()
+        {
+            Graphe<string> Metro = new Graphe<string>(true, "MetroParis.xlsx");
+            Interface<string> app = new Interface<string>(Metro);
+            Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
+            Console.WriteLine("Entre Bastlle et Temple : ");
+            Metro.Distance(Metro.Noeuds[13], Metro.Noeuds[58]);
+            Console.WriteLine("Appuyer sur entrer pour continuer");
+            Console.ReadLine();
+            Console.WriteLine("Entre Porte Maillot et Château de Vincenne : ");
+            Metro.Distance(Metro.Noeuds[0], Metro.Noeuds[18]);
+            Console.WriteLine("Appuyer sur entrer pour continuer");
+            Console.ReadLine();
+             Console.WriteLine("Entre Corvisart et Oberkampf : ");
+            Metro.Distance(Metro.Noeuds[130], Metro.Noeuds[231]);
+            Console.WriteLine("Appuyer sur entrer pour continuer");
+            Console.ReadLine();
 
 
-class Program{
-    public static void Main(){
-        /* Graphe<int> TestFile = new Graphe<int>(false, "soc-karate.mtx"); */
-        Noeud<int> n1 = new Noeud<int>(1);
-        Noeud<int> n2 = new Noeud<int>(2);
-        Noeud<int> n3 = new Noeud<int>(3);
-        Graphe<int> TestFile = new Graphe<int>(true, new List<Noeud<int>>{n1,n2,n3}, new List<Lien<int>>{new Lien<int>(n1, n2), new Lien<int>(n2, n3)});
-        AfficherMatrice(TestFile.Matrice_adj);
-        AfficherListeAdj(TestFile.Liste_adj);
-        Console.WriteLine(TestFile.IsConnexe());
-        Console.WriteLine(TestFile.ContientCircuit());
-        TestFile.DrawGraphe();
-    }
 
-    public static void AfficherMatrice(int[,] matrice_adj){
-        int lignes = matrice_adj.GetLength(0);
-        int colonnes = matrice_adj.GetLength(1);
-        for (int i = 0; i < lignes; i++){
-            for (int j = 0; j < colonnes; j++){
-                Console.Write(matrice_adj[i, j]);
-            }
-            Console.WriteLine();
-        }
-    }
-
-    public static void AfficherListeAdj(Dictionary<int, List<int>> liste){
-        foreach(var noeud in liste){
-            Console.WriteLine(noeud.Key + " : " + string.Join(", ", noeud.Value));
+            app.Run();
         }
     }
 }

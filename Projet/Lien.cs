@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
-namespace Projet
-{
-    public class Lien<T>
-    {
+namespace Projet{
+    public class Lien<T>{
         private Noeud<T> depart;
         private Noeud<T> arrivee;
-        private int poids;
+        private float poids;
 
         /// <summary>
-        /// Constructeur de la classe
+        /// Constructeur d'un lien
         /// </summary>
-        /// <param name="depart">noeud de départ</param>
-        /// <param name="arrivee">noeud d'arrivée</param>
-        public Lien (Noeud<T> depart, Noeud<T> arrivee)
-        {
+        /// <param name="depart">noeud de depart</param>
+        /// <param name="arrivee">noeud d'arriver</param>
+        /// <param name="poid">poid du lien</param>
+        public Lien(Noeud<T> depart, Noeud<T> arrivee, float poid){
             this.depart = depart;
             this.arrivee = arrivee;
+            this.poids = poid;
         }
 
         public Noeud<T> Depart
@@ -34,20 +33,11 @@ namespace Projet
             get { return arrivee; }
             set { arrivee = value; }
         }
-        public int Poids
+
+        public float Poids
         {
             get { return poids; }
-        }
-
-        /// <summary>
-        /// Affichage des caractéristiques d'un lien
-        /// </summary>
-        /// <returns>le début et la fin du lien</returns>
-
-        public string toString()
-        {
-            string s = "Lien : Départ du noeud : " + depart.Numnoeud + " jusqu'au noeud " + arrivee.Numnoeud;
-            return s;
+            set { poids = value; }
         }
     }
 }

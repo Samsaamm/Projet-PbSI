@@ -5,118 +5,141 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using Org.BouncyCastle.Crypto.Prng;
 
-namespace Projet
-{
-    internal class Graphe<T>
-    {
-        public bool IsOriented;
-        public List<Noeud<T>> noeuds = new List<Noeud<T>>();
-        public List<Lien<T>> liens = new List<Lien<T>>();
-        public Dictionary<int, List<int>> liste_adj = new Dictionary<int, List<int>>();
-        public int[,] matrice_adj = new int[0,0];
+namespace Projet{
+    public class Graphe<T>{
+        private bool isOriented;
+        private List<Noeud<T>> noeuds = new List<Noeud<T>>();
+        private List<Lien<T>> liens = new List<Lien<T>>();
+        private float[,] matrice_adj;
+        private Dictionary<int, List<int>> liste_adj;
+        private Bitmap? map;
 
-
-        /// <summary>Constructeur du graphe manuel</summary>/// 
+        /// <summary>
+        /// Constructeur par liste
+        /// </summary>
+        /// <param name="oriented">Est ce que le graphe est orienté</param>
+        /// <param name="noeuds">Liste de noeuds</param>
+        /// <param name="liens">Liste de liens</param>
         public Graphe(bool oriented, List<Noeud<T>> noeuds, List<Lien<T>> liens){
-            IsOriented = oriented;
+            this.isOriented = oriented;
             this.noeuds = noeuds;
             this.liens = liens;
-            CreatMatAdj(noeuds, liens);
-            CreateListAdj();
+            AvoidDoubleNoeud();
+            this.matrice_adj = CreateMatriceAdj(noeuds, liens, oriented);
+            this.liste_adj = CreateListeAdj(this.matrice_adj);
+            
         }
 
-        /// <summary>Constructeur du graphe a partir d'un fichier source</summary>
-        /// <param name="filepath">String, Indique le chemin vers le fichier a ouvrir</param>
+        /// <summary>
+        /// Constructeur par fichier. Accepte le format .mtx et .xlsx
+        /// </summary>
+        /// <param name="oriented">Est ce que le graphe est orienté</param>
+        /// <param name="filepath">Chemin vers le fichier</param>
         public Graphe(bool oriented, string filepath){
-            IsOriented = oriented;
-            if(filepath.Substring(filepath.Length - 4) == ".mtx"){
-                StreamReader SReader = null;
-                List<string> File = new List<string>();
-                try{
-                    SReader = new StreamReader(filepath);
-                    string line;
-                    while ((line = SReader.ReadLine()) != null){
-                        File.Add(line);
-                    }
-                    for(int i = 0; i < File.Count; i++){
-                        string ligne = File[i];
-                        if(ligne[0] == '%'){
-                            File.RemoveAt(i);
-                            i--;
-                        }
-                    }
-
-                    for(int i = 0; i < Convert.ToInt32(File[0].Split(' ')[0]); i++){
-                        noeuds.Add(new Noeud<T>(i+1));
-                    }    
-
-                    for(int i = 1; i < File.Count; i++){
-                        string[] data = File[i].Split(' ');
-                        liens.Add(new Lien<T>(noeuds[Convert.ToInt32(data[0]) - 1], noeuds[Convert.ToInt32(data[1]) - 1]));
-                    }
-
-                    CreatMatAdj(noeuds, liens);
-                    CreateListAdj();
-
-                }catch(Exception e){
-                    Console.WriteLine(e.ToString());
-
-                }finally{
-                    if(SReader != null){
-                        SReader.Close();
-                    }
-                }
-            }else if(filepath.Substring(filepath.Length - 5) == ".xlsx"){
-
-            }else{
-                Console.WriteLine("Extension du fichier invalide");
-            }
+            this.isOriented = oriented;
+            FileReader<T> reader = new FileReader<T>(filepath);
+            this.noeuds = reader.Noeuds;
+            this.liens = reader.Liens;
+            AvoidDoubleNoeud();
+            this.matrice_adj = CreateMatriceAdj(this.noeuds, this.liens, oriented);
+            this.liste_adj = CreateListeAdj(this.matrice_adj);
+            
         }
 
-        #region Attribut
-        public int[,] Matrice_adj{
-            get { return matrice_adj; }
+        public List<Noeud<T>> Noeuds{
+            get{ return this.noeuds;}
+        }
+
+        public List<Lien<T>> Liens{
+            get{ return this.liens;}
+        }
+
+        public float[,] Matrice_adj{
+            get{ return this.matrice_adj;}
         }
 
         public Dictionary<int, List<int>> Liste_adj{
-            get { return liste_adj;}
-        }
-        #endregion
-
-        public void CreatMatAdj(List<Noeud<T>> node, List<Lien<T>> link){
-            matrice_adj = new int[node.Count, node.Count];
-            for(int i =0; i < link.Count; i++){
-                matrice_adj[link[i].Depart.Numnoeud - 1, link[i].Arrivee.Numnoeud - 1] = 1;
-                if(!IsOriented){
-                    matrice_adj[link[i].Arrivee.Numnoeud - 1, link[i].Depart.Numnoeud - 1] = 1;
-                }
-            }
+            get { return this.liste_adj;}
         }
 
-        public void CreateListAdj(){
-            for(int i = 0; i < matrice_adj.GetLength(0); i++){
-                int noeud = i + 1;
-                liste_adj[noeud] = new List<int>();
-                for(int j = 0; j < matrice_adj.GetLength(1); j++){
-                    if(matrice_adj[i, j] == 1){
-                        liste_adj[noeud].Add(j + 1);
+        /// <summary>
+        /// Crée un lien représneter les liaisions pour chaque station qui apparait plusieurs fois
+        /// </summary>
+        public void AvoidDoubleNoeud(){
+            for(int i = 0; i < this.noeuds.Count; i++){
+                for(int j = 0; j < this.noeuds.Count; j++){
+                    if(this.noeuds[i].Equals(this.noeuds[j]) && i != j){
+                        liens.Add(new Lien<T>(this.noeuds[i], this.noeuds[j], 1));
                     }
                 }
             }
         }
 
-        public HashSet<Noeud<T>> DFS(Noeud<T> noeud, HashSet<Noeud<T>> visites){
+        /// <summary>
+        /// Creer la matrice d'adjacence du graphe
+        /// </summary>
+        /// <param name="n">Liste de noeuds</param>
+        /// <param name="l">Liste de liens</param>
+        /// <param name="IsOriented">Est ce que le graphe est orienté</param>
+        /// <returns>Renvoie une matrice de taille nxn contenant des floats</returns>
+        public float[,] CreateMatriceAdj(List<Noeud<T>> n, List<Lien<T>> l, bool IsOriented){
+            float[,] mat = new float[n.Count, n.Count];
+            for(int i =0; i < l.Count; i++){
+                mat[l[i].Depart.IdNoeud - 1, l[i].Arrivee.IdNoeud - 1] = l[i].Poids;
+                if(!IsOriented){
+                    mat[l[i].Arrivee.IdNoeud - 1, l[i].Depart.IdNoeud - 1] = l[i].Poids;
+                }
+            }
+            return mat;
+        }
+
+        /// <summary>
+        /// Creer la liste d'adjacence du graphe
+        /// </summary>
+        /// <param name="matrice_adj">La matrice d'adjacence du graphe</param>
+        /// <returns>Un dictionnaire ou les clés représente les id des noeuds du graphe et les valeur, la liste des id des noeuds liée</returns>
+        public Dictionary<int, List<int>> CreateListeAdj(float[,] matrice_adj){
+            Dictionary<int, List<int>> res = new Dictionary<int, List<int>>();
+            for(int i = 0; i < matrice_adj.GetLength(0); i++){
+                int noeud = i + 1;
+                res[noeud] = new List<int>();
+                for(int j = 0; j < matrice_adj.GetLength(1); j++){
+                    if(matrice_adj[i, j] == 1){
+                        res[noeud].Add(j + 1);
+                    }
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Algo de parcours en profondeur
+        /// </summary>
+        /// <param name="noeud">noeud de depart</param>
+        /// <param name="visites">HashSet nécéssaire pour les appel récurssif</param>
+        /// <returns>Le hashset des visites</returns>
+        public HashSet<Noeud<T>>? DFS(Noeud<T> noeud, HashSet<Noeud<T>> visites){
+            if(visites == null){
+                visites = new HashSet<Noeud<T>>();
+            }
             if(visites.Contains(noeud)){
                 return null;
             } 
             visites.Add(noeud);
-            foreach(var voisin in liste_adj[noeud.Numnoeud]){
+            foreach(var voisin in liste_adj[noeud.IdNoeud]){
                 DFS(noeuds[voisin - 1], visites);
             }
             return visites;
         }
 
+        /// <summary>
+        /// Parcours en largeur
+        /// </summary>
+        /// <param name="depart">noeud de depart</param>
+        /// <returns>Hashset des visites</returns>
         public HashSet<Noeud<T>> BFS(Noeud<T> depart){
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             Queue<Noeud<T>> file = new Queue<Noeud<T>>();
@@ -125,7 +148,7 @@ namespace Projet
 
             while(file.Count > 0){
                 Noeud<T> noeud = file.Dequeue();
-                foreach(var voisin in liste_adj[noeud.Numnoeud]){
+                foreach(var voisin in liste_adj[noeud.IdNoeud]){
                     if(!visites.Contains(noeuds[voisin - 1])){
                         visites.Add(noeuds[voisin - 1]);
                         file.Enqueue(noeuds[voisin - 1]);
@@ -135,28 +158,43 @@ namespace Projet
             return visites;
         }
 
+        /// <summary>
+        /// Est ce que le graphe est connexe
+        /// </summary>
+        /// <returns>Un bool true : graphe connexe, false : graphe non connexe</returns>
         public bool IsConnexe(){
             if (liste_adj.Count == 0) return true;
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             DFS(noeuds[liste_adj.Keys.First()], visites);
             return visites.Count == liste_adj.Count;
         }
-    
 
+        /// <summary>
+        ///  Est ce que le graphe contient en circuit
+        /// </summary>
+        /// <returns>un bool caractérisant le resultat</returns>
         public bool ContientCircuit(){
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
             bool res = false;
             foreach(var noeud in liste_adj.Keys){
-                if (!visites.Contains(noeuds[noeud - 1]) && DetecterCircuit(noeuds[noeud - 1], null, visites))
+                if (!visites.Contains(noeuds[noeud - 1]) && DetecterCircuit(noeuds[noeud - 1], null, visites)){
                     res = true;
+                }
             }
             return res;
         }
 
-        public bool DetecterCircuit(Noeud<T> noeud, Noeud<T> parent, HashSet<Noeud<T>> visites){
+        /// <summary>
+        /// Cherhce l'existence d'un circuit entre 2 noeuds
+        /// </summary>
+        /// <param name="noeud">depart</param>
+        /// <param name="parent">parent du noeuds</param>
+        /// <param name="visites">HashSet nécéssaire pour les appel récurssif</param>
+        /// <returns>Un bool caractérisant le resultat</returns>
+        public bool DetecterCircuit(Noeud<T> noeud, Noeud<T>? parent, HashSet<Noeud<T>> visites){
             visites.Add(noeud);
             bool res = false;
-            foreach(var voisin in liste_adj[noeud.Numnoeud]){
+            foreach(var voisin in liste_adj[noeud.IdNoeud]){
                 if(!visites.Contains(noeuds[voisin - 1])){
                     if(DetecterCircuit(noeuds[voisin - 1], noeud, visites)){
                         res = true;
@@ -167,212 +205,316 @@ namespace Projet
             }
             return res;
         }
-    
 
-        #region Graphique
-        public void DrawGraphe(int width = 1920, int height = 1080){
-            Bitmap bitmap = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(bitmap))
-            {
-                g.Clear(Color.White);
-                Pen pen = new Pen(Color.Black, 2);
-                Font font = new Font("Arial", 10);
-                Brush brush = Brushes.Blue;
-                Random rand = new Random();
+        /// <summary>
+        /// Calcul la distance entre 2 noeuds en utilisant les algo vu en cours
+        /// </summary>
+        /// <param name="source">noeud de depart</param>
+        /// <param name="cible">noeud d'arriver</param>
+        /// <param name="algo">algo utilisé </param>
+        /// <returns>Une liste de liens caractérisant le chemin utilisé</returns>
+        public List<Lien<T>?> Distance(Noeud<T> source, Noeud<T> cible, string algo = "dijk"){
+            List<Lien<T>?> chemin = new List<Lien<T>?>();
 
-                Dictionary<int, Point> positions = new Dictionary<int, Point>();
-
-                foreach (var noeud in liste_adj.Keys){
-                    int x = rand.Next(100, width - 100);
-                    int y = rand.Next(100, height - 100);
-                    positions[noeud] = new Point(x, y);
-                }
-
-                foreach (var noeud in liste_adj.Keys){
-                    foreach (var voisin in liste_adj[noeud]){
-                        if (positions.ContainsKey(voisin)){
-                            if(IsOriented){
-                                DrawArrow(g, pen, positions[noeud], positions[voisin]);
-                            }else{
-                                g.DrawLine(pen, positions[noeud], positions[voisin]);
-                            }
-                        }
-                    }
-                }
-
-                foreach (var noeud in liste_adj.Keys){
-                    Point pos = positions[noeud];
-                    g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
-                    g.DrawString(noeuds[noeud - 1].Numnoeud.ToString(), font, Brushes.White, pos.X - 5, pos.Y - 5);
+            bool neg = false;
+            foreach(var lien in liens){
+                if(lien.Poids < 0){
+                    neg = true;
                 }
             }
-            
-            string imagePath = "graph.png";
-            bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
-            Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
+            if(!neg){
+                Dictionary<Noeud<T>, Noeud<T>> precedents = null;
+                if(algo == "dijk"){
+                    precedents = Dijkstra(source);
+                }else if(algo == "bell"){
+                    precedents = BellmanFord(source);
+                }else if(algo == "floy"){
+                    Dictionary<Noeud<T>, Dictionary<Noeud<T>, Noeud<T>?>> values = FloydWarshall();
+                    precedents = values[source];
+                }else{
+                    Console.WriteLine("Erreur type d'algo invalide");
+                }
+                
+                Noeud<T>? prec = cible;
+                while(prec != source){
+                    foreach(var lien in liens){
+                        if(lien.Depart == precedents[prec] && lien.Arrivee == prec){
+                            chemin.Add(lien);
+                        }
+                    }
+                    prec = precedents[prec];
+                }
+                Bitmap bitmap = DrawChemin(chemin);
+                string imagePath = "graph.png";
+                bitmap.Save(imagePath, System.Drawing.Imaging.ImageFormat.Png);
+                Process.Start(new ProcessStartInfo(imagePath) { UseShellExecute = true });
+            }
+
+            return chemin;
         }
 
         /// <summary>
-        /// Dessine une flèche entre deux points
+        /// Algo de Dijkstar
         /// </summary>
-        private void DrawArrow(Graphics g, Pen pen, Point start, Point end)
-        {
-            AdjustableArrowCap arrowCap = new AdjustableArrowCap(5, 10);
-            pen.CustomEndCap = arrowCap;
-            g.DrawLine(pen, start, end);
-        }
-        #endregion
-        
-        public Dictionary<Noeud<T>, int> Dijkstra(Noeud<T> source)
-        {
-            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
-            Dictionary<Noeud<T>, Noeud<T>> precedents = new Dictionary<Noeud<T>, Noeud<T>>();
+        /// <param name="source">noeuds source</param>
+        /// <returns>Dictionnaire des précendents</returns>
+        public Dictionary<Noeud<T>, Noeud<T>?> Dijkstra(Noeud<T> source){
+            Dictionary<Noeud<T>, float> distances = new Dictionary<Noeud<T>, float>();
+            Dictionary<Noeud<T>, Noeud<T>?> precedents = new Dictionary<Noeud<T>, Noeud<T>?>();
             HashSet<Noeud<T>> non_visites = new HashSet<Noeud<T>>(noeuds);
 
-            for(int i = 0; i < noeuds.Count; i++)
-            {
-                distances[noeuds[i]] = int.MaxValue;
+            for(int i = 0; i < noeuds.Count; i++){
+                distances[noeuds[i]] = float.MaxValue;
                 precedents[noeuds[i]] = null;
             }
             distances[source] = 0;
-            while(non_visites.Count > 0)
-            {
-                Noeud<T> noeudActuel = null;
-                int distanceMin = int.MaxValue;
-                List<Noeud<T>> non_visites_liste = non_visites.ToList();
-                for(int i = 0; i < non_visites_liste.Count; i++)
-                {
-                    Noeud<T> noeud = non_visites_liste[i];
-                    if(distances[noeud] < distanceMin)
-                    {
-                        distanceMin = distances[noeud];
-                        noeudActuel = noeud;
+            
+            while(non_visites.Count > 0){
+                Noeud<T> u = null;
+                float minDist = float.MaxValue;
+                foreach(var noeud in non_visites){
+                    if(distances[noeud] < minDist){
+                        minDist = distances[noeud];
+                        u = noeud;
                     }
                 }
-                if(noeudActuel != null)
-                {
-                    non_visites.Remove(noeudActuel);
-
-                    for(int i = 0; i < liens.Count; i++)
-                    {
-                        if(liens[i].Depart.Equals(noeudActuel))
-                        {
-                            Noeud<T> voisinNoeud = liens[i].Arrivee;
-                            if(liens[i].Poids > 0)
-                            {
-                                int nouvelleDistance = distances[noeudActuel] + liens[i].Poids;
-                                if(nouvelleDistance < distances[voisinNoeud])
-                                {
-                                    distances[voisinNoeud] = nouvelleDistance;
-                                    precedents[voisinNoeud] = noeudActuel;
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Erreur, tout les poids doivent etre positif");
+                if(u != null){
+                    non_visites.Remove(u);
+                    for(int i = 0; i < noeuds.Count; i++){
+                        if(matrice_adj[u.IdNoeud - 1, i] > 0 && non_visites.Contains(noeuds[i])){
+                            float newDist = distances[u] + matrice_adj[u.IdNoeud - 1, i];
+                            if(newDist < distances[noeuds[i]]){
+                                distances[noeuds[i]] = newDist;
+                                precedents[noeuds[i]] = u;
                             }
                         }
                     }
+                }else{
+                    break;
                 }
             }
-            return distances;
+            return precedents;
         }
 
-
-        public Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> FloydWarshall()
+        /// <summary>
+        /// Algo de Bellman Ford
+        /// </summary>
+        /// <param name="source">noeud source</param>
+        /// <returns>Dictionnaire des précédent</returns>
+        public Dictionary<Noeud<T>, Noeud<T>?> BellmanFord(Noeud<T> source)
         {
-            int count = noeuds.Count;
-            int[,] distance = new int[count, count];
-            for (int i = 0; i < count; i++)
-            {
-                for (int j = 0; j < count; j++)
-                {
-                    if (i == j)
-                    {
-                        distance[i, j] = 0;
-                    }
-                    else
-                    {
-                        distance[i, j] = int.MaxValue;
-                    }
-                }
+            Dictionary<Noeud<T>, float> distances = new Dictionary<Noeud<T>, float>();
+            Dictionary<Noeud<T>, Noeud<T>?> precedents = new Dictionary<Noeud<T>, Noeud<T>?>();
+            for (int i = 0; i < noeuds.Count; i++){
+                distances[noeuds[i]] = float.MaxValue;
+                precedents[noeuds[i]] = null;
             }
-            for (int k = 0; k < liens.Count; k++)
-            {
-                int departIndex = liens[k].Depart.Numnoeud - 1;
-                int arriveeIndex = liens[k].Arrivee.Numnoeud - 1;
-                distance[departIndex, arriveeIndex] = liens[k].Poids;
-                if (IsOriented == false)
-                {
-                    distance[arriveeIndex, departIndex] = liens[k].Poids;
-                }
-            }
-            for (int l = 0; l < count; l++)
-            {
-                for (int m = 0; m < count; m++)
-                {
-                    for (int o = 0; o < count; o++)
-                    {
-                        if (distance[m, o] > distance[m, l] + distance[m, o])
-                        {
-                            distance[m, o] = distance[m, l] + distance[m, o];
+            distances[source] = 0;
+
+            int n = noeuds.Count;
+            for (int iter = 0; iter < n - 1; iter++){
+                for (int u = 0; u < n; u++){
+                    for (int v = 0; v < n; v++){
+                        if (matrice_adj[u, v] > 0 && distances[noeuds[u]] != float.MaxValue){
+                            float newDist = distances[noeuds[u]] + matrice_adj[u, v];
+
+                            if (newDist < distances[noeuds[v]]){
+                                distances[noeuds[v]] = newDist;
+                                precedents[noeuds[v]] = noeuds[u];
+                            }
                         }
                     }
                 }
             }
-            Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> result = new Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>>();
-            for (int p = 0; p < count; p++)
-            {
-                var noeudSource = noeuds[p];
-                result[noeudSource] = new Dictionary<Noeud<T>, int>();
-                for (int q = 0; q < count; q++)
-                {
-                    var noeudDestination = noeuds[q];
-                    result[noeudSource][noeudDestination] = distance[p, q];
+
+            for (int u = 0; u < n; u++){
+                for (int v = 0; v < n; v++){
+                    if (matrice_adj[u, v] > 0 && distances[noeuds[u]] != float.MaxValue){
+                        if (distances[noeuds[u]] + matrice_adj[u, v] < distances[noeuds[v]]){
+                            throw new Exception("Cycle absorbant détecté !");
+                        }
+                    }
                 }
             }
+
+            return precedents;
+        }
+
+        /// <summary>
+        /// Algo de Floyd Warshall
+        /// </summary>
+        /// <returns>Dictionnaire des Dictionnaire des précédent pour chaque noeuds du graphe</returns>
+        public Dictionary<Noeud<T>, Dictionary<Noeud<T>, Noeud<T>?>> FloydWarshall()
+        {
+            int n = noeuds.Count;
+            float[,] distances = new float[n, n];
+            Dictionary<Noeud<T>, Dictionary<Noeud<T>, Noeud<T>?>> predecesseurs = new();
+
+            for (int i = 0; i < n; i++){
+                predecesseurs[noeuds[i]] = new Dictionary<Noeud<T>, Noeud<T>?>();
+                for (int j = 0; j < n; j++){
+                    if (i == j){
+                        distances[i, j] = 0;
+                        predecesseurs[noeuds[i]][noeuds[j]] = null;
+                    }else if (matrice_adj[i, j] > 0){
+                        distances[i, j] = matrice_adj[i, j];
+                        predecesseurs[noeuds[i]][noeuds[j]] = noeuds[i];
+                    }else{
+                        distances[i, j] = float.MaxValue;
+                        predecesseurs[noeuds[i]][noeuds[j]] = null;
+                    }
+                }
+            }
+            for (int k = 0; k < n; k++){
+                for (int i = 0; i < n; i++){
+                    for (int j = 0; j < n; j++){
+                        if (distances[i, k] < float.MaxValue && distances[k, j] < float.MaxValue){
+                            float newDist = distances[i, k] + distances[k, j];
+                            if (newDist < distances[i, j]){
+                                distances[i, j] = newDist;
+                                predecesseurs[noeuds[i]][noeuds[j]] = predecesseurs[noeuds[k]][noeuds[j]];
+                            }
+                        }
+                    }
+                }
+            }
+            return predecesseurs;
+        }
+
+        /// <summary>
+        /// Dessine le chemin le plus rapide sur le plans du graphe
+        /// </summary>
+        /// <param name="chemin">liste des lien catégorisant le chemin a dessiner</param>
+        /// <param name="map">Le plans du graphe sous forme de Bitmap</param>
+        /// <returns>Renvoie une Bitmap avec le chemin dessiner</returns>
+        public Bitmap DrawChemin(List<Lien<T>> chemin, Bitmap? map = null){
+            if(map == null){
+                map = DrawGraphe();
+            }
+            using(Graphics g = Graphics.FromImage(map)){
+                Pen pen = new Pen(Color.Red, 3);
+                Font font = new Font("Arial", 10);
+
+                Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
+                foreach(var noeud in noeuds){
+                    double x = noeud.CoX;
+                    double y = noeud.CoY;
+                    positions[noeud.IdNoeud] = [x, y];
+                }
+                Dictionary<int, Point> CartPositions = CooCartesienne(positions, map.Width - 50, map.Height - 50);
+                foreach(var lien in chemin){
+                    Point d = CartPositions[lien.Depart.IdNoeud - 1];
+                    d.Y = map.Height - d.Y;
+                    Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
+                    a.Y = map.Height - a.Y;
+                    if(isOriented){
+                        DrawArrow(g, pen, d, a);
+                    }else{
+                        g.DrawLine(pen, d, a);
+                    }
+                }
+            }
+            return map;
+        }
+
+        /// <summary>
+        /// Dessine le plans du graphe
+        /// </summary>
+        /// <param name="width">largeur de l'image</param>
+        /// <param name="height">hauteur de l'image</param>
+        /// <returns>renvoie le plans sous forme de Bitmap</returns>
+        public Bitmap DrawGraphe(int width = 1920*2, int height = 1080*2){
+            Bitmap bitmap= new Bitmap(width, height);
+            using(Graphics g = Graphics.FromImage(bitmap)){
+                g.Clear(Color.White);
+                Pen pen = new Pen(Color.Black, 2);
+                Font font = new Font("Arial", 10);
+                Brush brush = Brushes.Black;
+                Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
+                foreach(var noeud in noeuds){
+                    double x = noeud.CoX;
+                    double y = noeud.CoY;
+                    positions[noeud.IdNoeud] = [x, y];
+                }
+                Dictionary<int, Point> CartPositions = CooCartesienne(positions, width - 50, height - 50);
+                foreach(var noeud in noeuds){
+                    Point pos = CartPositions[noeud.IdNoeud - 1];
+                    pos.Y = height - pos.Y;
+                    g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
+                    if(noeud.ValeurNoeud != null){
+                        g.DrawString(noeud.ValeurNoeud.ToString(), font, brush, pos.X, pos.Y - 25);
+                    }else{
+                        g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
+                    }
+                }
+                foreach(var lien in liens){
+                    Point d = CartPositions[lien.Depart.IdNoeud - 1];
+                    d.Y = height - d.Y;
+                    Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
+                    a.Y = height - a.Y;
+                    if(isOriented){
+                        DrawArrow(g, pen, d, a);
+                    }else{
+                        g.DrawLine(pen, d, a);
+                    }
+                }
+            }
+            this.map = bitmap;
+            return bitmap;
+        }
+
+        /// <summary>
+        /// Transforme des coordonnée au format longitude latite en coordonnée cartésienne
+        /// </summary>
+        /// <param name="positions">Liste des coordonnée a transformer</param>
+        /// <param name="largeur">intervalle possible pour la coordonnée x</param>
+        /// <param name="hauteur">intervalle possible pour la coordonnée y</param>
+        /// <returns>renvoie la liste des positiions transformer</returns>
+        public Dictionary<int, Point> CooCartesienne(Dictionary<int, double[]> positions, int largeur, int hauteur){
+            Dictionary<int, Point> result = new Dictionary<int, Point>();
+            List<double[]> coos = new List<double[]>();
+            int R = 6371;
+            int xMax = int.MinValue;
+            int xMin = int.MaxValue;
+            int yMax = int.MinValue;
+            int yMin = int.MaxValue;
+            foreach(var (i, pos) in positions){
+                //Ici, on utilise la projection de mercator https://fr.wikipedia.org/wiki/Projection_de_Mercator
+                double x = R * pos[0] * Math.PI / 180 % 100 * 10;
+                double y = R * Math.Log(Math.Tan(Math.PI / 4 + pos[1] * Math.PI / 180 / 2)) % 100 * 10;
+                if(x > xMax){
+                    xMax = (int)x;
+                }
+                if(x < xMin){
+                    xMin = (int)x;
+                }
+                if(y > yMax){
+                    yMax = (int)y;
+                }
+                if(y < yMin){
+                    yMin = (int)y;
+                }
+                coos.Add([x, y]);
+            }
+
+            for(int i = 0; i < coos.Count; i++){
+                result.Add(i, new Point((int)(50 + (coos[i][0] - xMin) * (largeur - 50) / (xMax - xMin)), (int)(50 + (coos[i][1] - yMin) * (hauteur - 50) / (yMax - yMin))));
+            }
+
             return result;
         }
 
-        public Dictionary<Noeud<T>, int> BellmanFord(Noeud<T> depart)
-        {
-            Dictionary<Noeud<T>, int> distances = new Dictionary<Noeud<T>, int>();
-
-            foreach (Noeud<T> n in noeuds)
-            {
-                distances[n] = int.MaxValue;
-            }
-            distances[depart] = 0;
-
-            for(int i=0; i<noeuds.Count-1; i++)
-            {
-                foreach (Lien<T> l in liens)
-                {
-                    Noeud<T> Dep = l.Depart;
-                    Noeud<T> Arr = l.Arrivee;
-
-                    if (distances[Dep] != int.MaxValue && distances[Dep] +l.Poids < distances[Arr])
-                    {
-                        distances[Arr]=distances[Dep]+1;
-                    }
-                }
-            }
-
-            foreach (var lien in liens)
-            {
-                Noeud<T> Dep = lien.Depart;
-                Noeud<T> Arr = lien.Arrivee;
-
-                if (distances[Dep] != int.MaxValue && distances[Dep] + lien.Poids < distances[Arr])
-                {
-                    Console.WriteLine("Le graphe contient un cycle absorbant");
-                    return null;
-                }
-            }
-
-            return distances;
-
-
+        /// <summary>
+        /// Dessine une fleche sur le plans
+        /// </summary>
+        /// <param name="g">Graphics</param>
+        /// <param name="pen">Pen</param>
+        /// <param name="start">Point de depart</param>
+        /// <param name="end">Point d'arriver</param>
+        private void DrawArrow(Graphics g, Pen pen, Point start, Point end){
+            AdjustableArrowCap arrowCap = new AdjustableArrowCap(5, 10);
+            pen.CustomEndCap = arrowCap;
+            g.DrawLine(pen, start, end);
         }
     }
 }

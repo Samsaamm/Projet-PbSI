@@ -281,39 +281,39 @@ namespace Projet
 
         public Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> FloydWarshall()
         {
-            int count  = noeuds.Count;
+            int count = noeuds.Count;
             int[,] distance = new int[count, count];
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                for(int j = 0; j < count; j++)
+                for (int j = 0; j < count; j++)
                 {
-                    if(i == j)
+                    if (i == j)
                     {
                         distance[i, j] = 0;
                     }
                     else
                     {
                         distance[i, j] = int.MaxValue;
-                    }                       
+                    }
                 }
             }
-            for(int k = 0; k < liens.Count; k++)
+            for (int k = 0; k < liens.Count; k++)
             {
                 int departIndex = liens[k].Depart.Numnoeud - 1;
                 int arriveeIndex = liens[k].Arrivee.Numnoeud - 1;
                 distance[departIndex, arriveeIndex] = liens[k].Poids;
-                if(IsOriented == false)
+                if (IsOriented == false)
                 {
                     distance[arriveeIndex, departIndex] = liens[k].Poids;
                 }
             }
-            for(int l = 0; l < count; l++)
+            for (int l = 0; l < count; l++)
             {
-                for(int m = 0; m < count; m++)
+                for (int m = 0; m < count; m++)
                 {
-                    for(int o= 0; o < count; o++)
+                    for (int o = 0; o < count; o++)
                     {
-                        if(distance[m, o] > distance[m, l] + distance[m, o])
+                        if (distance[m, o] > distance[m, l] + distance[m, o])
                         {
                             distance[m, o] = distance[m, l] + distance[m, o];
                         }
@@ -321,17 +321,18 @@ namespace Projet
                 }
             }
             Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>> result = new Dictionary<Noeud<T>, Dictionary<Noeud<T>, int>>();
-            for(int p = 0; p < count; p++)
+            for (int p = 0; p < count; p++)
             {
                 var noeudSource = noeuds[p];
                 result[noeudSource] = new Dictionary<Noeud<T>, int>();
-                for(int q = 0; q < count; q++)
+                for (int q = 0; q < count; q++)
                 {
                     var noeudDestination = noeuds[q];
                     result[noeudSource][noeudDestination] = distance[p, q];
                 }
             }
             return result;
+        }
 
         public Dictionary<Noeud<T>, int> BellmanFord(Noeud<T> depart)
         {

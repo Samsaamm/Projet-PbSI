@@ -16,9 +16,9 @@ namespace Projet {
         public Interface(Graphe<T> metro) {
             this.Metro = metro;
             try {
-                string connexionString = "SERVER=localhost;PORT=3306;" +
-                                         "DATABASE=projet_PSI;" +
-                                         "UID=root;PASSWORD=-Saph2005";
+                string connexionString = "SERVER=127.0.0.1;PORT=3306;" +
+                         "DATABASE=projet_PSI;" +
+                         "UID=psi_user;PASSWORD=test;";
                 maConnexion = new MySqlConnection(connexionString);
                 maConnexion.Open();
                 Console.WriteLine("Connexion réussie à la base de données.");

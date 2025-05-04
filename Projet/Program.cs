@@ -37,6 +37,42 @@ namespace Projet{
             Console.WriteLine("Graphe de relations généré et sauvegardé sous 'graphe_relations.png'");
             Console.ReadLine();
 
+            Dictionary<int, int> coloration = grapheRelations.WelshPowellColoration();
+
+            Console.WriteLine("\nRésultats de la coloration (Welsh-Powell) :");
+            foreach (KeyValuePair<int, int> paire in coloration)
+            {
+                Console.WriteLine("Noeud " + grapheRelations.Noeuds[paire.Key - 1].ValeurNoeud + " => Couleur " + paire.Value);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Nombre minimal de couleurs nécessaires : " + coloration.Values.Max());
+            Console.WriteLine();
+
+            bool estBiparti = grapheRelations.EstBiparti(coloration);
+            if (estBiparti)
+            {
+                Console.WriteLine("Le graphe est biparti : Oui");
+            }
+            else
+            {
+                Console.WriteLine("Le graphe est biparti : Non");
+            }
+
+            bool estPlanaire = grapheRelations.EstPlanaire();
+            if (estPlanaire)
+            {
+                Console.WriteLine("Le graphe est planaire (selon heuristique) : Probablement");
+            }
+            else
+            {
+                Console.WriteLine("Le graphe est planaire (selon heuristique) : Non");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Groupes indépendants :");
+            grapheRelations.AfficherGroupesIndependants(coloration);
+            Console.ReadLine();
+
 
             app.Run();
         }

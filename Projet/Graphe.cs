@@ -516,5 +516,96 @@ namespace Projet{
             pen.CustomEndCap = arrowCap;
             g.DrawLine(pen, start, end);
         }
+
+        public Dictionary<int, int> WelshPowellColoration()
+        {
+            Dictionary<int, int> couleurs = new Dictionary<int, int>();
+            Dictionary<int, int> degres = new Dictionary<int, int>();
+
+            foreach (Noeud<T> n in noeuds)
+            {
+                degres[n.IdNoeud] = liste_adj[n.IdNoeud].Count;
+            }
+
+            List<int> ordre = degres.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+            int couleurActuelle = 1;
+
+            while (ordre.Count > 0)
+            {
+                List<int> disponibles = new List<int>();
+
+                foreach (int noeud in ordre)
+                {
+                    bool voisinColorie = false;
+                    foreach (int voisin in liste_adj[noeud])
+                    {
+                        if (couleurs.ContainsKey(voisin) && couleurs[voisin] == couleurActuelle)
+                        {
+                            voisinColorie = true;
+                        }
+                    }
+                    if (!couleurs.ContainsKey(noeud) && !voisinColorie)
+                    {
+                        disponibles.Add(noeud);
+                    }
+                }
+
+                foreach (int n in disponibles)
+                {
+                    couleurs[n] = couleurActuelle;
+                    ordre.Remove(n);
+                }
+                couleurActuelle++;
+            }
+
+            return couleurs;
+        }
+
+        public bool EstBiparti(Dictionary<int, int> coloration)
+        {
+            int nbCouleurs = coloration.Values.Distinct().Count();
+            if (nbCouleurs <= 2)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void AfficherGroupesIndependants(Dictionary<int, int> coloration)
+        {
+            Dictionary<int, List<string>> groupes = new Dictionary<int, List<string>>();
+            foreach (KeyValuePair<int, int> paire in coloration)
+            {
+                int couleur = paire.Value;
+                string valeur = Convert.ToString(noeuds[paire.Key - 1].ValeurNoeud);
+
+                if (!groupes.ContainsKey(couleur))
+                {
+                    groupes[couleur] = new List<string>();
+                }
+                groupes[couleur].Add(valeur);
+            }
+
+            foreach (KeyValuePair<int, List<string>> groupe in groupes)
+            {
+                Console.WriteLine("Groupe independant (couleur " + groupe.Key + ") :");
+                foreach (string nom in groupe.Value)
+                {
+                    Console.Write(nom + ", ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public bool EstPlanaire()
+        {
+            int n = noeuds.Count;
+            int a = liens.Count;
+            if (!isOriented && a <= 3 * n - 6)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace Projet{
         {
             Graphe<string> Metro = new Graphe<string>(true, "MetroParis.xlsx");
             Interface<string> app = new Interface<string>(Metro);
+
+            //CHemin le plus court
             Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
             Console.WriteLine("Entre Bastlle et Temple : ");
             Metro.Distance(Metro.Noeuds[13], Metro.Noeuds[58]);
@@ -28,6 +30,7 @@ namespace Projet{
             Console.WriteLine("Appuyer sur entrer pour continuer");
             Console.ReadLine();
 
+            //Graphe relations
             Console.WriteLine("Construction du graphe des relations...");
             Graphe<string> grapheRelations = ConstruireGrapheRelations();
             Bitmap img = grapheRelations.DrawGraphe();
@@ -35,43 +38,39 @@ namespace Projet{
             img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
             Console.WriteLine("Graphe de relations généré et sauvegardé sous 'graphe_relations.png'");
+            Console.WriteLine("Appuyer sur entrer pour continuer");
             Console.ReadLine();
 
-            Dictionary<int, int> coloration = grapheRelations.WelshPowellColoration();
-
-            Console.WriteLine("\nRésultats de la coloration (Welsh-Powell) :");
-            foreach (KeyValuePair<int, int> paire in coloration)
+            //Coloration Welsh Powell
+            Dictionary<Noeud<string>, int> couleurs = grapheRelations.WelshPowell();
+            Console.WriteLine("Coloration Welsh-Powell :");
+            foreach (KeyValuePair<Noeud<string>, int> entry in couleurs)
             {
-                Console.WriteLine("Noeud " + grapheRelations.Noeuds[paire.Key - 1].ValeurNoeud + " => Couleur " + paire.Value);
+                Console.WriteLine(entry.Key.ValeurNoeud + " => Couleur " + entry.Value);
             }
-            Console.WriteLine();
-            Console.WriteLine("Nombre minimal de couleurs nécessaires : " + coloration.Values.Max());
-            Console.WriteLine();
+            Console.WriteLine("Nombre de couleurs utilisées : " + couleurs.Values.Distinct().Count());
 
-            bool estBiparti = grapheRelations.EstBiparti(coloration);
-            if (estBiparti)
+            //Graphue biparti?
+            if (grapheRelations.EstBiparti())
             {
-                Console.WriteLine("Le graphe est biparti : Oui");
+                Console.WriteLine("Le graphe est biparti d apres l algorithme de Welsh Powel");
             }
             else
             {
-                Console.WriteLine("Le graphe est biparti : Non");
+                Console.WriteLine("Le graphe n'est pas biparti d apres l algorithme de Welsh Powel");
             }
 
-            bool estPlanaire = grapheRelations.EstPlanaire();
-            if (estPlanaire)
-            {
-                Console.WriteLine("Le graphe est planaire (selon heuristique) : Probablement");
-            }
-            else
-            {
-                Console.WriteLine("Le graphe est planaire (selon heuristique) : Non");
-            }
-
-            Console.WriteLine();
+            //Groupe independant
+            Dictionary<int, List<Noeud<string>>> groupes = grapheRelations.GroupesIndependants();
             Console.WriteLine("Groupes indépendants :");
-            grapheRelations.AfficherGroupesIndependants(coloration);
-            Console.ReadLine();
+            foreach (KeyValuePair<int, List<Noeud<string>>> groupe in groupes)
+            {
+                Console.WriteLine("Couleur " + groupe.Key + " :");
+                foreach (Noeud<string> n in groupe.Value)
+                {
+                    Console.WriteLine(" - " + n.ValeurNoeud);
+                }
+            }
 
 
             app.Run();

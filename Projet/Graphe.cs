@@ -417,51 +417,134 @@ namespace Projet{
             return map;
         }
 
+
+        //DRAW Graphe sans couleur
         /// <summary>
         /// Dessine le plans du graphe
         /// </summary>
         /// <param name="width">largeur de l'image</param>
         /// <param name="height">hauteur de l'image</param>
         /// <returns>renvoie le plans sous forme de Bitmap</returns>
-        public Bitmap DrawGraphe(int width = 1920*2, int height = 1080*2){
-            Bitmap bitmap= new Bitmap(width, height);
-            using(Graphics g = Graphics.FromImage(bitmap)){
+        //public Bitmap DrawGraphe(int width = 1920*2, int height = 1080*2){
+        //    Bitmap bitmap= new Bitmap(width, height);
+        //    using(Graphics g = Graphics.FromImage(bitmap)){
+        //        g.Clear(Color.White);
+        //        Pen pen = new Pen(Color.Black, 2);
+        //        Font font = new Font("Arial", 10);
+        //        Brush brush = Brushes.Black;
+        //        Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
+        //        foreach(var noeud in noeuds){
+        //            double x = noeud.CoX;
+        //            double y = noeud.CoY;
+        //            positions[noeud.IdNoeud] = [x, y];
+        //        }
+        //        Dictionary<int, Point> CartPositions = CooCartesienne(positions, width - 50, height - 50);
+        //        foreach(var noeud in noeuds){
+        //            Point pos = CartPositions[noeud.IdNoeud - 1];
+        //            pos.Y = height - pos.Y;
+        //            g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
+        //            if(noeud.ValeurNoeud != null){
+        //                g.DrawString(noeud.ValeurNoeud.ToString(), font, brush, pos.X, pos.Y - 25);
+        //            }else{
+        //                g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
+        //            }
+        //        }
+        //        foreach(var lien in liens){
+        //            Point d = CartPositions[lien.Depart.IdNoeud - 1];
+        //            d.Y = height - d.Y;
+        //            Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
+        //            a.Y = height - a.Y;
+        //            if(isOriented){
+        //                DrawArrow(g, pen, d, a);
+        //            }else{
+        //                g.DrawLine(pen, d, a);
+        //            }
+        //        }
+        //    }
+        //    this.map = bitmap;
+        //    return bitmap;
+        //}
+
+        //Draw graphue couleur
+        public Bitmap DrawGraphe(int width = 1920 * 2, int height = 1080 * 2)
+        {
+            Bitmap bitmap = new Bitmap(width, height);
+            Dictionary<Noeud<T>, int> couleurs = WelshPowell();
+
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
                 g.Clear(Color.White);
                 Pen pen = new Pen(Color.Black, 2);
                 Font font = new Font("Arial", 10);
-                Brush brush = Brushes.Black;
+                Brush brushTexte = Brushes.Black;
+
                 Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
-                foreach(var noeud in noeuds){
+                foreach (Noeud<T> noeud in noeuds)
+                {
                     double x = noeud.CoX;
                     double y = noeud.CoY;
-                    positions[noeud.IdNoeud] = [x, y];
+                    positions[noeud.IdNoeud] = new double[] { x, y };
                 }
-                Dictionary<int, Point> CartPositions = CooCartesienne(positions, width - 50, height - 50);
-                foreach(var noeud in noeuds){
-                    Point pos = CartPositions[noeud.IdNoeud - 1];
-                    pos.Y = height - pos.Y;
-                    g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
-                    if(noeud.ValeurNoeud != null){
-                        g.DrawString(noeud.ValeurNoeud.ToString(), font, brush, pos.X, pos.Y - 25);
-                    }else{
-                        g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
-                    }
-                }
-                foreach(var lien in liens){
-                    Point d = CartPositions[lien.Depart.IdNoeud - 1];
+
+                Dictionary<int, Point> cartPositions = CooCartesienne(positions, width - 50, height - 50);
+
+                foreach (Lien<T> lien in liens)
+                {
+                    Point d = cartPositions[lien.Depart.IdNoeud - 1];
                     d.Y = height - d.Y;
-                    Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
+                    Point a = cartPositions[lien.Arrivee.IdNoeud - 1];
                     a.Y = height - a.Y;
-                    if(isOriented){
+
+                    if (isOriented)
+                    {
                         DrawArrow(g, pen, d, a);
-                    }else{
+                    }
+                    else
+                    {
                         g.DrawLine(pen, d, a);
                     }
                 }
+
+                foreach (Noeud<T> noeud in noeuds)
+                {
+                    Point pos = cartPositions[noeud.IdNoeud - 1];
+                    pos.Y = height - pos.Y;
+
+                    Brush brush = Brushes.Gray;
+                    if (couleurs.ContainsKey(noeud))
+                    {
+                        brush = GetColorFromInt(couleurs[noeud]);
+                    }
+
+                    g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
+                    g.DrawEllipse(Pens.Black, pos.X - 10, pos.Y - 10, 20, 20);
+
+                    if (noeud.ValeurNoeud != null)
+                    {
+                        g.DrawString(noeud.ValeurNoeud.ToString(), font, brushTexte, pos.X + 12, pos.Y - 10);
+                    }
+                    else
+                    {
+                        g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
+                    }
+                }
             }
+
             this.map = bitmap;
             return bitmap;
         }
+        public Brush GetColorFromInt(int i)
+        {
+            Color[] couleurs = new Color[]
+            {
+        Color.Blue, Color.Red, Color.Green, Color.Orange, Color.Purple,
+        Color.Cyan, Color.Magenta, Color.Brown, Color.Teal, Color.DarkGray
+            };
+
+            return new SolidBrush(couleurs[i % couleurs.Length]);
+        }
+
+
 
         /// <summary>
         /// Transforme des coordonnée au format longitude latite en coordonnée cartésienne
@@ -516,96 +599,86 @@ namespace Projet{
             pen.CustomEndCap = arrowCap;
             g.DrawLine(pen, start, end);
         }
-
-        public Dictionary<int, int> WelshPowellColoration()
+        public Dictionary<Noeud<T>, int> WelshPowell()
         {
-            Dictionary<int, int> couleurs = new Dictionary<int, int>();
-            Dictionary<int, int> degres = new Dictionary<int, int>();
+            Dictionary<Noeud<T>, int> couleurs = new Dictionary<Noeud<T>, int>();
+            List<Noeud<T>> listeTriee = new List<Noeud<T>>(noeuds);
+            listeTriee.Sort((n1, n2) => liste_adj[n2.IdNoeud].Count.CompareTo(liste_adj[n1.IdNoeud].Count));
 
-            foreach (Noeud<T> n in noeuds)
+            int couleur = 0;
+
+            for (int i = 0; i < listeTriee.Count; i++)
             {
-                degres[n.IdNoeud] = liste_adj[n.IdNoeud].Count;
-            }
+                Noeud<T> noeud = listeTriee[i];
 
-            List<int> ordre = degres.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
-            int couleurActuelle = 1;
-
-            while (ordre.Count > 0)
-            {
-                List<int> disponibles = new List<int>();
-
-                foreach (int noeud in ordre)
+                if (!couleurs.ContainsKey(noeud))
                 {
-                    bool voisinColorie = false;
-                    foreach (int voisin in liste_adj[noeud])
+                    couleurs[noeud] = couleur;
+
+                    for (int j = i + 1; j < listeTriee.Count; j++)
                     {
-                        if (couleurs.ContainsKey(voisin) && couleurs[voisin] == couleurActuelle)
+                        Noeud<T> autre = listeTriee[j];
+
+                        if (!couleurs.ContainsKey(autre))
                         {
-                            voisinColorie = true;
+                            bool estAdjoint = false;
+
+                            foreach (int voisinId in liste_adj[autre.IdNoeud])
+                            {
+                                Noeud<T> voisin = noeuds[voisinId - 1];
+
+                                if (couleurs.ContainsKey(voisin) && couleurs[voisin] == couleur)
+                                {
+                                    estAdjoint = true;
+                                    break;
+                                }
+                            }
+
+                            if (!estAdjoint)
+                            {
+                                couleurs[autre] = couleur;
+                            }
                         }
                     }
-                    if (!couleurs.ContainsKey(noeud) && !voisinColorie)
-                    {
-                        disponibles.Add(noeud);
-                    }
-                }
 
-                foreach (int n in disponibles)
-                {
-                    couleurs[n] = couleurActuelle;
-                    ordre.Remove(n);
+                    couleur++;
                 }
-                couleurActuelle++;
             }
 
             return couleurs;
         }
-
-        public bool EstBiparti(Dictionary<int, int> coloration)
+        public bool EstBiparti()
         {
-            int nbCouleurs = coloration.Values.Distinct().Count();
-            if (nbCouleurs <= 2)
+            Dictionary<Noeud<T>, int> couleurs = WelshPowell();
+            int nombreCouleurs = couleurs.Values.Distinct().Count();
+            if (nombreCouleurs == 2)
             {
                 return true;
             }
-            return false;
-        }
-
-        public void AfficherGroupesIndependants(Dictionary<int, int> coloration)
-        {
-            Dictionary<int, List<string>> groupes = new Dictionary<int, List<string>>();
-            foreach (KeyValuePair<int, int> paire in coloration)
+            else
             {
-                int couleur = paire.Value;
-                string valeur = Convert.ToString(noeuds[paire.Key - 1].ValeurNoeud);
+                return false;
+            }
+        }
+        public Dictionary<int, List<Noeud<T>>> GroupesIndependants()
+        {
+            Dictionary<Noeud<T>, int> couleurs = WelshPowell();
+            Dictionary<int, List<Noeud<T>>> groupes = new Dictionary<int, List<Noeud<T>>>();
+
+            foreach (KeyValuePair<Noeud<T>, int> element in couleurs)
+            {
+                int couleur = element.Value;
+                Noeud<T> noeud = element.Key;
 
                 if (!groupes.ContainsKey(couleur))
                 {
-                    groupes[couleur] = new List<string>();
+                    groupes[couleur] = new List<Noeud<T>>();
                 }
-                groupes[couleur].Add(valeur);
+
+                groupes[couleur].Add(noeud);
             }
 
-            foreach (KeyValuePair<int, List<string>> groupe in groupes)
-            {
-                Console.WriteLine("Groupe independant (couleur " + groupe.Key + ") :");
-                foreach (string nom in groupe.Value)
-                {
-                    Console.Write(nom + ", ");
-                }
-                Console.WriteLine();
-            }
-        }
-
-        public bool EstPlanaire()
-        {
-            int n = noeuds.Count;
-            int a = liens.Count;
-            if (!isOriented && a <= 3 * n - 6)
-            {
-                return true;
-            }
-            return false;
-        }
+            return groupes;
+        }        
     }
 }

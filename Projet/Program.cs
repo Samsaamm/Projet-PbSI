@@ -78,6 +78,8 @@ namespace Projet{
 
             InterfaceV2<string> app = new InterfaceV2<string>(Metro);
         }
+
+        
         public static Graphe<string> ConstruireGrapheRelations()
         {
             List<Noeud<string>> noeuds = new List<Noeud<string>>();
@@ -186,7 +188,6 @@ namespace Projet{
                                 x = positionsStations[stationClient[relation.Item1]].Item1;
                                 y = positionsStations[stationClient[relation.Item1]].Item2;
                             }
-                            //Creer un petit cercle autour de la stationj de metro pour pas que les clietns ne se superpose pas
                             double angleClient = (mapNoeuds.Count % 8) * (Math.PI / 4);
                             double rayonClient = 0.0003;
                             double xClient = x + rayonClient * Math.Cos(angleClient);
@@ -208,7 +209,6 @@ namespace Projet{
                                 y = positionsStations[stationCuisinier[relation.Item2]].Item2;
                             }
 
-                            //Creer un petit cercle autour de la stationj de metro pour pas que les cuisinier ne se superpose pas
                             double angleCuisinier = (mapNoeuds.Count % 8) * (Math.PI / 4);
                             double rayonCuisinier = 0.0003;
                             double xCuisinier = x + rayonCuisinier * Math.Cos(angleCuisinier);

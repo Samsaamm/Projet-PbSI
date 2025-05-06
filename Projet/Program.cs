@@ -13,13 +13,10 @@ namespace Projet{
         public static void Main()
         {
             Graphe<string> Metro = new Graphe<string>(true, "MetroParis.xlsx");
-<<<<<<< HEAD
             /* Interface<string> app = new Interface<string>(Metro);
-=======
             Interface<string> app = new Interface<string>(Metro);
 
             //CHemin le plus court
->>>>>>> 817c3c5f3903e63619f9e139f816f6cd6ba29f18
             Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
             Console.WriteLine("Entre Bastlle et Temple : ");
             Metro.Distance(Metro.Noeuds[13], Metro.Noeuds[58]);

@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\maxen\\OneDrive - Delft University of Technology\\Bureaublad\\Projet Info S4\\Projet-PbSI\\Projet\\Projet.csproj": {}
+    "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj": {}
   },
   "projects": {
-    "C:\\Users\\maxen\\OneDrive - Delft University of Technology\\Bureaublad\\Projet Info S4\\Projet-PbSI\\Projet\\Projet.csproj": {
+    "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\maxen\\OneDrive - Delft University of Technology\\Bureaublad\\Projet Info S4\\Projet-PbSI\\Projet\\Projet.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj",
         "projectName": "Projet",
-        "projectPath": "C:\\Users\\maxen\\OneDrive - Delft University of Technology\\Bureaublad\\Projet Info S4\\Projet-PbSI\\Projet\\Projet.csproj",
-        "packagesPath": "C:\\Users\\maxen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\maxen\\OneDrive - Delft University of Technology\\Bureaublad\\Projet Info S4\\Projet-PbSI\\Projet\\obj\\",
+        "projectPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\Projet.csproj",
+        "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\samue\\OneDrive - De Vinci\\Esilv\\A2\\S2\\PbSI\\Projet-PbSI\\Projet\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\maxen\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,8 +39,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -82,7 +77,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

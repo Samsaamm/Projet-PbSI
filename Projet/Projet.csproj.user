@@ -6,8 +6,4 @@
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.31" />
-  </ItemGroup>
 </Project>

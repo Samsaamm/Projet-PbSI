@@ -13,11 +13,9 @@ namespace Projet{
         public static void Main()
         {
             Graphe<string> Metro = new Graphe<string>(true, "MetroParis.xlsx");
-            /* Interface<string> app = new Interface<string>(Metro);
-            Interface<string> app = new Interface<string>(Metro);
+            /* Interface<string> app = new Interface<string>(Metro); */
 
-            //CHemin le plus court
-            Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
+            /* Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
             Console.WriteLine("Entre Bastlle et Temple : ");
             Metro.Distance(Metro.Noeuds[13], Metro.Noeuds[58]);
             Console.WriteLine("Appuyer sur entrer pour continuer");
@@ -30,9 +28,12 @@ namespace Projet{
             Metro.Distance(Metro.Noeuds[130], Metro.Noeuds[231]);
             Console.WriteLine("Appuyer sur entrer pour continuer");
             Console.ReadLine();
+            
+            
+            app.Run(); */
 
-            //Graphe relations
-            Console.WriteLine("Construction du graphe des relations...");
+
+            /* Console.WriteLine("Construction du graphe des relations...");
             Graphe<string> grapheRelations = ConstruireGrapheRelations();
             Bitmap img = grapheRelations.DrawGraphe();
             string path = "graphe_relations.png";
@@ -42,7 +43,7 @@ namespace Projet{
             Console.WriteLine("Appuyer sur entrer pour continuer");
             Console.ReadLine();
 
-            //Coloration Welsh Powell
+
             Dictionary<Noeud<string>, int> couleurs = grapheRelations.WelshPowell();
             Console.WriteLine("Coloration Welsh-Powell :");
             foreach (KeyValuePair<Noeud<string>, int> entry in couleurs)
@@ -51,7 +52,7 @@ namespace Projet{
             }
             Console.WriteLine("Nombre de couleurs utilisées : " + couleurs.Values.Distinct().Count());
 
-            //Graphue biparti?
+
             if (grapheRelations.EstBiparti())
             {
                 Console.WriteLine("Le graphe est biparti d apres l algorithme de Welsh Powel");
@@ -61,7 +62,7 @@ namespace Projet{
                 Console.WriteLine("Le graphe n'est pas biparti d apres l algorithme de Welsh Powel");
             }
 
-            //Groupe independant
+
             Dictionary<int, List<Noeud<string>>> groupes = grapheRelations.GroupesIndependants();
             Console.WriteLine("Groupes indépendants :");
             foreach (KeyValuePair<int, List<Noeud<string>>> groupe in groupes)
@@ -71,10 +72,9 @@ namespace Projet{
                 {
                     Console.WriteLine(" - " + n.ValeurNoeud);
                 }
-            }
+            } */
 
 
-            app.Run(); */
 
             InterfaceV2<string> app = new InterfaceV2<string>(Metro);
         }

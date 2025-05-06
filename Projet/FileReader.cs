@@ -40,6 +40,7 @@ namespace Projet{
                     }
                 }
             }else if(filepath.Substring(filepath.Length - 5) == ".xlsx"){
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var package = new ExcelPackage(new FileInfo(filepath))){
                     var worksheet = package.Workbook.Worksheets[0];
                     int rowCount = worksheet.Dimension.Rows;

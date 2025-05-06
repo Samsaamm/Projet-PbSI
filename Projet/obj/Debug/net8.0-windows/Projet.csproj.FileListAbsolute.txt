@@ -49,4 +49,79 @@ C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\MySql.Data.dll
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\ZstdNet.dll
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\BouncyCastle.Crypto.dll
+<<<<<<< HEAD
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Spectre.Console.dll
+=======
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.exe
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.deps.json
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.runtimeconfig.json
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.pdb
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.Interfaces.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.System.Drawing.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\ZstdNet.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\bin\Debug\net8.0-windows\BouncyCastle.Crypto.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.AssemblyReference.cache
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfoInputs.cache
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfo.cs
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.CoreCompileInputs.cache
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.sourcelink.json
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.Up2Date
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\refint\Projet.dll
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.pdb
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.genruntimeconfig.cache
+C:\Users\maxen\OneDrive - Delft University of Technology\Bureaublad\Projet Info S4\Projet-PbSI\Projet\obj\Debug\net8.0-windows\ref\Projet.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.exe
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.deps.json
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.runtimeconfig.json
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Projet.pdb
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.Interfaces.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\EPPlus.System.Drawing.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\MySql.Data.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\ZstdNet.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\BouncyCastle.Crypto.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.AssemblyReference.cache
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfoInputs.cache
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.AssemblyInfo.cs
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.CoreCompileInputs.cache
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.sourcelink.json
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.csproj.Up2Date
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\refint\Projet.dll
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.pdb
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.genruntimeconfig.cache
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\ref\Projet.dll
+>>>>>>> 817c3c5f3903e63619f9e139f816f6cd6ba29f18

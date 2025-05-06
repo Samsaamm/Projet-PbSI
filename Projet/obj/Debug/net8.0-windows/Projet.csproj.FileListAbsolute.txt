@@ -49,3 +49,4 @@ C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\MySql.Data.dll
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\ZstdNet.dll
 C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\BouncyCastle.Crypto.dll
+C:\Users\samue\OneDrive - De Vinci\Esilv\A2\S2\PbSI\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Spectre.Console.dll

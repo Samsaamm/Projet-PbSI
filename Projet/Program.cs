@@ -10,7 +10,7 @@ namespace Projet{
         public static void Main()
         {
             Graphe<string> Metro = new Graphe<string>(true, "MetroParis.xlsx");
-            Interface<string> app = new Interface<string>(Metro);
+            /* Interface<string> app = new Interface<string>(Metro);
             Console.WriteLine("Exemple d'affichage du chemin le plus cours entre deux station : ");
             Console.WriteLine("Entre Bastlle et Temple : ");
             Metro.Distance(Metro.Noeuds[13], Metro.Noeuds[58]);
@@ -27,7 +27,9 @@ namespace Projet{
 
 
 
-            app.Run();
+            app.Run(); */
+
+            InterfaceV2<string> app = new InterfaceV2<string>(Metro);
         }
     }
 }

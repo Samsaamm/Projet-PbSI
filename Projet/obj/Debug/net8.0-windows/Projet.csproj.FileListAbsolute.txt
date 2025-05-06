@@ -125,3 +125,4 @@ C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Proj
 C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\Projet.genruntimeconfig.cache
 C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\obj\Debug\net8.0-windows\ref\Projet.dll
 >>>>>>> 817c3c5f3903e63619f9e139f816f6cd6ba29f18
+C:\Users\sarah\Documents\GitHub\Projet-PbSI\Projet\bin\Debug\net8.0-windows\Spectre.Console.dll

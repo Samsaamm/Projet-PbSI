@@ -352,3 +352,34 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-05-06 20:29:22
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON projet_psi.* TO 'admin'@'localhost';
+
+CREATE USER 'client'@'localhost' IDENTIFIED BY 'motdepasse_client';
+GRANT SELECT, INSERT ON projet_psi.avis TO 'client'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.client TO 'client'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.commande TO 'client'@'localhost';
+GRANT SELECT ON projet_psi.cuisinier TO 'client'@'localhost';
+GRANT SELECT ON projet_psi.effectuer TO 'client'@'localhost';
+GRANT SELECT, INSERT ON projet_psi.historiquetransactions TO 'client'@'localhost';
+GRANT SELECT ON projet_psi.lignemétro TO 'client'@'localhost';
+GRANT SELECT, INSERT ON projet_psi.livraison TO 'client'@'localhost';
+GRANT SELECT ON projet_psi.métrostation TO 'client'@'localhost';
+GRANT SELECT, UPDATE ON projet_psi.plat TO 'client'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.utilisateur TO 'client'@'localhost';
+
+CREATE USER 'cuisinier'@'localhost' IDENTIFIED BY 'motdepasse_cuisinier';
+GRANT SELECT ON projet_psi.avis TO 'cuisinier'@'localhost';
+GRANT SELECT ON projet_psi.client TO 'cuisinier'@'localhost';
+GRANT SELECT, UPDATE ON projet_psi.commande TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, SELECT ON projet_psi.cuisinier TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.effectuer TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT ON projet_psi.historiquetransactions TO 'cuisinier'@'localhost';
+GRANT SELECT ON projet_psi.lignemétro TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.livraison TO 'cuisinier'@'localhost';
+GRANT SELECT ON projet_psi.métrostation TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.plat TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.utilisateur TO 'cuisinier'@'localhost';
+
+FLUSH PRIVILEGES;

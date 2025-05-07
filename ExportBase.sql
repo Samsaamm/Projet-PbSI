@@ -353,6 +353,8 @@ UNLOCK TABLES;
 
 -- Dump completed on 2025-05-06 20:29:22
 
+USE projet_psi;
+
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'root';
 GRANT ALL PRIVILEGES ON projet_psi.* TO 'admin'@'localhost';
 
@@ -360,7 +362,7 @@ CREATE USER 'client'@'localhost' IDENTIFIED BY 'motdepasse_client';
 GRANT SELECT, INSERT ON projet_psi.avis TO 'client'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON projet_psi.client TO 'client'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON projet_psi.commande TO 'client'@'localhost';
-GRANT SELECT ON projet_psi.cuisinier TO 'client'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.cuisinier TO 'client'@'localhost';
 GRANT SELECT ON projet_psi.effectuer TO 'client'@'localhost';
 GRANT SELECT, INSERT ON projet_psi.historiquetransactions TO 'client'@'localhost';
 GRANT SELECT ON projet_psi.lignemétro TO 'client'@'localhost';
@@ -371,7 +373,7 @@ GRANT SELECT, INSERT, UPDATE ON projet_psi.utilisateur TO 'client'@'localhost';
 
 CREATE USER 'cuisinier'@'localhost' IDENTIFIED BY 'motdepasse_cuisinier';
 GRANT SELECT ON projet_psi.avis TO 'cuisinier'@'localhost';
-GRANT SELECT ON projet_psi.client TO 'cuisinier'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON projet_psi.client TO 'cuisinier'@'localhost';
 GRANT SELECT, UPDATE ON projet_psi.commande TO 'cuisinier'@'localhost';
 GRANT SELECT, INSERT, SELECT ON projet_psi.cuisinier TO 'cuisinier'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON projet_psi.effectuer TO 'cuisinier'@'localhost';

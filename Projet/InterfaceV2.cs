@@ -822,11 +822,11 @@ namespace Projet {
                         .PageSize(10)
                         .AddChoices(
                             "Ajouter un retard sur le réseaux de transport",
+                            "Graphe relationnel",
                             "Gestion des Clients",
                             "Gestion des Cuisiniers",
                             "Gestion des Commandes",
                             "Statistiques",
-                            "Graphe relationnel",
                             "[red]Quitter[/]")
                 );
 
@@ -1070,7 +1070,7 @@ namespace Projet {
                         double longitude = Convert.ToDouble(lecteurStation["Longitude"].ToString(), CultureInfo.InvariantCulture);
                         double latitude = Convert.ToDouble(lecteurStation["Latitude"].ToString(), CultureInfo.InvariantCulture);
 
-                        positionsStations[id] = new Tuple<double, double>(longitude, latitude);
+                        positionsStations[id] = new Tuple<double, double>(latitude, longitude);
                     }
                     lecteurStation.Close();
                     commandeStation.Dispose();
@@ -1141,11 +1141,7 @@ namespace Projet {
                                 x = positionsStations[stationClient[relation.Item1]].Item1;
                                 y = positionsStations[stationClient[relation.Item1]].Item2;
                             }
-                            double angleClient = (mapNoeuds.Count % 8) * (Math.PI / 4);
-                            double rayonClient = 0.0003;
-                            double xClient = x + rayonClient * Math.Cos(angleClient);
-                            double yClient = y + rayonClient * Math.Sin(angleClient);
-                            Noeud<string> noeudClient = new Noeud<string>(mapNoeuds.Count + 1, nomClient, xClient, yClient);
+                            Noeud<string> noeudClient = new Noeud<string>(mapNoeuds.Count + 1, nomClient, x, y);
 
                             noeuds.Add(noeudClient);
                             mapNoeuds[nomClient] = noeudClient;
@@ -1158,12 +1154,7 @@ namespace Projet {
                                 x = positionsStations[stationCuisinier[relation.Item2]].Item1;
                                 y = positionsStations[stationCuisinier[relation.Item2]].Item2;
                             }
-
-                            double angleCuisinier = (mapNoeuds.Count % 8) * (Math.PI / 4);
-                            double rayonCuisinier = 0.0003;
-                            double xCuisinier = x + rayonCuisinier * Math.Cos(angleCuisinier);
-                            double yCuisinier = y + rayonCuisinier * Math.Sin(angleCuisinier);
-                            Noeud<string> noeudCuisinier = new Noeud<string>(mapNoeuds.Count + 1, nomCuisinier, xCuisinier, yCuisinier);
+                            Noeud<string> noeudCuisinier = new Noeud<string>(mapNoeuds.Count + 1, nomCuisinier, x, y);
 
                             noeuds.Add(noeudCuisinier);
                             mapNoeuds[nomCuisinier] = noeudCuisinier;

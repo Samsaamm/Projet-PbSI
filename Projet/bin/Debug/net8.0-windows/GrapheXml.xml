@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GrapheRelationnel>
+  <Noeuds>
+    <Noeud Id="1" Nom="Client_1" X="48.856953459837165" Y="2.3481609912345767" />
+    <Noeud Id="2" Nom="Cuisinier_0" X="48.85205429254951" Y="2.3687189610340877" />
+    <Noeud Id="3" Nom="Client_0" X="48.84808428902576" Y="2.395843988723737" />
+  </Noeuds>
+  <Liens>
+    <Lien Depart="1" Arrivee="2" Poids="1" />
+    <Lien Depart="3" Arrivee="2" Poids="1" />
+  </Liens>
+</GrapheRelationnel>

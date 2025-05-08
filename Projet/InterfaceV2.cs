@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Xml.Linq;
+using System.Text.Json;
 
 namespace Projet {
     class InterfaceV2<T>{
@@ -406,8 +408,7 @@ namespace Projet {
 
         #region ModeClient
 
-        public void SeePlat(int ID)
-        {
+        public void SeePlat(int ID){
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Liste des plats disponibles :[/]");
 
@@ -423,11 +424,19 @@ namespace Projet {
             for (int i = 0; i < res1.Length / 2; i++)
                 plats.Add((res1[i * 2], res1[i * 2 + 1]));
 
+            var options = plats
+                .Select(p => p.nom)
+                .Concat(new[] { "[red]Quitter[/]" })
+                .ToArray();
+
             var choixNom = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[green]Sélectionnez un plat pour commander ou [red]Échap[/] pour quitter :[/]")
-                    .AddChoices(plats.Select(p => p.nom))
+                    .Title("[green]Sélectionnez un plat ou [red]Quitter[/] :[/]")
+                    .AddChoices(options)
             );
+
+            if (choixNom == "[red]Quitter[/]")
+                return;
 
             var platChoisi = plats.First(p => p.nom == choixNom);
             string req2 = $"SELECT Nombre_pers, Id_cuisinier, Prix FROM Plat WHERE Id_plat = {platChoisi.id};";
@@ -437,10 +446,14 @@ namespace Projet {
             int quant;
 
             do{
-                quant = AnsiConsole.Ask<int>($"[yellow]Quelle quantité souhaitez-vous ? Disponible : {quantDispo}[/]");
-                if (quant <= 0 || quant > quantDispo)
+                quant = AnsiConsole.Ask<int>($"[yellow]Quelle quantité souhaitez-vous ? Disponible : {quantDispo} (0 pour annuler)[/]");
+                if (quant == 0){
+                    AnsiConsole.MarkupLine("[grey]Commande annulée.[/]");
+                    return;
+                }
+                if (quant < 0 || quant > quantDispo)
                     AnsiConsole.MarkupLine("[red]Quantité invalide, veuillez réessayer.[/]");
-            }while (quant <= 0 || quant > quantDispo);
+            } while (quant < 0 || quant > quantDispo);
 
             DateTime dateAujourdhui = DateTime.Today;
             string dateCommande = dateAujourdhui.ToString("dd/MM/yy");
@@ -451,35 +464,29 @@ namespace Projet {
             string req4 = $"UPDATE Plat SET Nombre_pers = Nombre_pers - {quant} WHERE Id_plat = {platChoisi.id};";
 
             try{
-                var command = maConnexion.CreateCommand();
-                command.CommandText = req3;
-                command.ExecuteNonQuery();
-                command.Dispose();
+                using var cmd = maConnexion.CreateCommand();
+                cmd.CommandText = req3;
+                cmd.ExecuteNonQuery();
 
-                command = maConnexion.CreateCommand();
-                command.CommandText = req4;
-                command.ExecuteNonQuery();
-                command.Dispose();
+                cmd.CommandText = req4;
+                cmd.ExecuteNonQuery();
 
                 AnsiConsole.MarkupLine("[green]Commande enregistrée avec succès ![/]");
                 AfficherTrajet(ID, Convert.ToInt32(res2[1]));
-            }
-            catch (MySqlException e){
+            }catch (MySqlException e){
                 AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
-            }
-            catch (Exception e){
-                AnsiConsole.MarkupLine($"[red]Erreur inattendue :[/] {e.Message}");
             }
         }
 
-        public void SeeCommande(int ID){
+        public void SeeCommande(int ID)
+        {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Vos commandes en cours :[/]");
-
-            string req1 = "SELECT Id_plat, Id_commande FROM Commande WHERE Id_client = " + ID + " AND Statut = \"active\";";
+        
+            string req1 = $"SELECT Id_plat, Id_commande FROM Commande WHERE Id_client = {ID} AND Statut = \"active\";";
             string[] res1 = Requete(req1);
-            Console.WriteLine(res1.Length);
-            if (res1[0] == null){
+
+            if (res1.Length == 0 || res1[0] == null){
                 AnsiConsole.MarkupLine("[red]Aucune commande en cours.[/]");
                 return;
             }
@@ -491,51 +498,60 @@ namespace Projet {
                 commandes.Add((res2[0], res1[i * 2 + 1]));
             }
 
+            var options = commandes
+                .Select(c => c.nom)
+                .Concat(new[] { "[red]Quitter[/]" })
+                .ToArray();
+
             var choixNom = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[green]Sélectionnez une commande pour plus d'infos ou [red]Échap[/] pour quitter :[/]")
-                    .AddChoices(commandes.Select(c => c.nom))
+                    .Title("[green]Sélectionnez une commande pour plus d'infos ou [red]Quitter[/] :[/]")
+                    .AddChoices(options)
             );
+
+            if (choixNom == "[red]Quitter[/]")
+                return;
 
             var commandeChoisie = commandes.First(c => c.nom == choixNom);
             string req3 = $"SELECT * FROM Commande WHERE Id_commande = {commandeChoisie.id};";
             string[] res3 = Requete(req3);
 
-            AnsiConsole.MarkupLine($"[bold]Nom plat :[/] {commandeChoisie.nom}\n[bold]Quantité :[/] {res3[4]}\n[bold]Date commande :[/] {res3[5]}\n[bold]Prix :[/] {res3[6]}\n");
+            AnsiConsole.MarkupLine($@"
+                [bold]Nom du plat :[/]    {commandeChoisie.nom}
+                [bold]Quantité :[/]       {res3[4]}
+                [bold]Date commande :[/] {res3[5]}
+                [bold]Prix :[/]           {res3[6]}
+            ");
 
             var choixAction = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Que souhaitez-vous faire ?[/]")
-                    .AddChoices("Voir le trajet", "Supprimer la commande", "Quitter")
+                    .AddChoices("Voir le trajet", "Supprimer la commande", "[red]Retour[/]")
             );
 
-            switch (choixAction){
+            switch (choixAction) {
                 case "Voir le trajet":
                     AfficherTrajet(ID, Convert.ToInt32(res3[1]));
                     break;
+
                 case "Supprimer la commande":
                     string req4 = $"UPDATE Commande SET Statut = \"supprimer\" WHERE Id_commande = {commandeChoisie.id};";
                     string req5 = $"UPDATE Plat SET Nombre_pers = Nombre_pers + {res3[4]} WHERE Id_plat = {res3[0]};";
-
                     try{
-                        var command = maConnexion.CreateCommand();
-                        command.CommandText = req4;
-                        command.ExecuteNonQuery();
-                        command.Dispose();
+                        using var cmd = maConnexion.CreateCommand();
+                        cmd.CommandText = req4;
+                        cmd.ExecuteNonQuery();
 
-                        command = maConnexion.CreateCommand();
-                        command.CommandText = req5;
-                        command.ExecuteNonQuery();
-                        command.Dispose();
+                        cmd.CommandText = req5;
+                        cmd.ExecuteNonQuery();
 
                         AnsiConsole.MarkupLine("[green]Commande supprimée avec succès ![/]");
                     }catch (MySqlException e){
                         AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
-                    }catch (Exception e){
-                        AnsiConsole.MarkupLine($"[red]Erreur inattendue :[/] {e.Message}");
                     }
                     break;
-                case "Quitter":
+
+                case "[red]Retour[/]":
                     return;
                 default:
                     AnsiConsole.MarkupLine("[red]Choix invalide, veuillez réessayer.[/]");
@@ -648,15 +664,14 @@ namespace Projet {
             for (int i = 0; i < res1.Length / 2; i++)
                 plats.Add((res1[i * 2], res1[i * 2 + 1]));
 
-            for (int i = 0; i < plats.Count; i++){
-                AnsiConsole.MarkupLine($"{i + 1}. {plats[i].nom}");
-            }
-
             var choixNom = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[green]Sélectionnez un plat à gérer ou [red]Échap[/] pour quitter :[/]")
-                    .AddChoices(plats.Select(p => p.nom))
+                    .Title("[green]Sélectionnez un plat à gérer ou [red]Quitter[/] :[/]")
+                    .AddChoices(plats.Select(p => p.nom).Concat(new[] { "[red]Quitter[/]" }))
             );
+
+            if (choixNom == "[red]Quitter[/]")
+                return;
 
             var platChoisi = plats.First(p => p.nom == choixNom);
             string req2 = $"SELECT * FROM Plat WHERE Id_plat = {platChoisi.id};";
@@ -667,7 +682,7 @@ namespace Projet {
             var choixAction = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Que souhaitez-vous faire ?[/]")
-                    .AddChoices("Supprimer le plat", "Quitter")
+                    .AddChoices("Supprimer le plat", "[red]Retour[/]")
             );
 
             switch (choixAction){
@@ -678,15 +693,14 @@ namespace Projet {
                         command.CommandText = req3;
                         command.ExecuteNonQuery();
                         command.Dispose();
-
                         AnsiConsole.MarkupLine("[green]Plat supprimé avec succès ![/]");
                     }catch (MySqlException e){
-                        AnsiConsole.MarkupLine($"[red]Erreur de connexion :[/] {e.Message}");
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
                     }catch (Exception e){
                         AnsiConsole.MarkupLine($"[red]Erreur inattendue :[/] {e.Message}");
                     }
                     break;
-                case "Quitter":
+                case "[red]Retour[/]":
                     return;
                 default:
                     AnsiConsole.MarkupLine("[red]Choix invalide, veuillez réessayer.[/]");
@@ -697,43 +711,42 @@ namespace Projet {
         public void GererCommande(int ID){
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Vos commandes en cours :[/]");
-
+        
             string req1 = $"SELECT Id_plat, Id_commande FROM Commande WHERE Id_cuisinier = {ID} AND Statut = \"active\";";
             string[] res1 = Requete(req1);
-
-            List<string[]> res2 = new List<string[]>();
+        
+            var res2 = new List<string[]>();
             for (int i = 0; i < res1.Length / 2; i++){
                 string req2 = $"SELECT Nom FROM Plat WHERE Id_plat = {res1[i * 2]};";
                 res2.Add(Requete(req2));
             }
-
+        
             if (res2.Count == 0){
                 AnsiConsole.MarkupLine("[red]Aucune commande en cours.[/]");
                 return;
             }
-
-            for (int i = 0; i < res2.Count; i++){
-                AnsiConsole.MarkupLine($"{i + 1}. {res2[i][0]}");
-            }
-
+        
+            var noms = res2.Select(r => r[0]).Concat(new[] { "[red]Quitter[/]" }).ToArray();
             var choixCommande = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[green]Entrez le numéro de la commande pour laquelle vous souhaitez des informations ou [red]Échap[/] pour quitter :[/]")
-                    .AddChoices(res2.Select(r => r[0]))
+                    .Title("[green]Sélectionnez une commande ou [red]Quitter[/] :[/]")
+                    .AddChoices(noms)
             );
-
+            if (choixCommande == "[red]Quitter[/]")
+                return;
+        
             int rang = res2.FindIndex(r => r[0] == choixCommande);
             string req3 = $"SELECT * FROM Commande WHERE Id_commande = {res1[rang * 2 + 1]};";
             string[] res3 = Requete(req3);
-
+        
             AnsiConsole.MarkupLine($"[bold]Nom plat :[/] {res2[rang][0]}\n[bold]Quantité :[/] {res3[4]}\n[bold]Date commande :[/] {res3[5]}\n[bold]Prix :[/] {res3[6]}\n");
-
+        
             var choixAction = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Que souhaitez-vous faire ?[/]")
-                    .AddChoices("Voir le trajet", "Supprimer la commande", "Quitter")
+                    .AddChoices("Voir le trajet", "Supprimer la commande", "[red]Retour[/]")
             );
-
+        
             switch (choixAction){
                 case "Voir le trajet":
                     AfficherTrajet(ID, Convert.ToInt32(res3[1]));
@@ -745,21 +758,19 @@ namespace Projet {
                     try{
                         command.ExecuteNonQuery();
                         command.Dispose();
-
                         string req5 = $"UPDATE Plat SET Nombre_pers = Nombre_pers + {res3[4]} WHERE Id_plat = {res1[rang * 2]};";
                         command = maConnexion.CreateCommand();
                         command.CommandText = req5;
                         command.ExecuteNonQuery();
                         command.Dispose();
-
                         AnsiConsole.MarkupLine("[green]Commande supprimée avec succès ![/]");
                     }catch (MySqlException e){
-                        AnsiConsole.MarkupLine($"[red]Erreur de connexion :[/] {e.Message}");
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
                     }catch (Exception e){
                         AnsiConsole.MarkupLine($"[red]Erreur inattendue :[/] {e.Message}");
                     }
                     break;
-                case "Quitter":
+                case "[red]Retour[/]":
                     return;
                 default:
                     AnsiConsole.MarkupLine("[red]Choix invalide, veuillez réessayer.[/]");
@@ -865,12 +876,24 @@ namespace Projet {
                         .PageSize(10)
                         .AddChoices(
                             "Generer le graphe",
+                            "Colorer le graphe",
+                            "Generer un fichier xml",
+                            "Generer un fichier Json",
                             "[red]Quitter[/]")
                 );
 
                 switch (choix){
                     case "Generer le graphe":
-                        ConstruireGrapheRelations();
+                        ConstruireGrapheRelations(false);
+                        break;
+                    case "Colorer le graphe":
+                        ConstruireGrapheRelations(true);
+                        break;
+                    case "Generer un fichier xml":
+                        ExporterGrapheRelationnelEnXml("GrapheXml.xml");
+                        break;
+                    case "Generer un fichier Json":
+                        ExporterGrapheRelationnelEnJson("GrapheJson.json");
                         break;
                     case "[red]Quitter[/]":
                         AnsiConsole.MarkupLine("[green]Au revoir ![/]");
@@ -913,26 +936,63 @@ namespace Projet {
                     .Title("[blue]Module de gestion des clients[/]")
                     .PageSize(10)
                     .AddChoices(
-                        "Clients par ordre alphabétique",
-                        "Modifier un client",
-                        "Supprimer un client",
                         "Afficher les clients",
+                        "Clients par ordre alphabétique",
                         "[red]Retour au menu principal[/]")
             );
 
             switch (choix)
             {
                 case "Clients par ordre alphabétique":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Tri des clients par ordre alphabétique...");
-                    break;
-                case "Modifier un client":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Modification d'un client...");
-                    break;
-                case "Supprimer un client":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Suppression d'un client...");
+                    string requete = @"SELECT u.Id_utilisateur, u.Nom, u.`Prénom` AS Prenom FROM client c JOIN utilisateur u ON c.Id_utilisateur = u.Id_utilisateur ORDER BY u.Nom ASC;";
+
+                    try{
+                        var command = maConnexion.CreateCommand();
+                        command.CommandText = requete;
+
+                        using var reader = command.ExecuteReader();
+                        var clients = new List<(string IdUtilisateur, string Nom, string Prenom)>();
+                        while (reader.Read())
+                        {
+                            string idUtil  = reader.GetString("Id_utilisateur");
+                            string nom     = reader.GetString("Nom");
+                            string prenom  = reader.GetString("Prenom");
+                            clients.Add((idUtil, nom, prenom));
+                        }
+
+                        AnsiConsole.MarkupLine("[bold yellow]Liste des clients par ordre alphabétique :[/]");
+                        foreach (var (id, nom, prenom) in clients)
+                        {
+                            AnsiConsole.MarkupLine($"[green]ID Utilisateur:[/] {id} [bold]Nom:[/] {nom} [bold]Prénom:[/] {prenom}");
+                        }
+                    }
+                    catch (MySqlException e)
+                    {
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "Afficher les clients":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Affichage des clients...");
+                    requete = @"SELECT u.Id_utilisateur, u.Nom, u.`Prénom` AS Prenom FROM client c JOIN utilisateur u ON c.Id_utilisateur = u.Id_utilisateur;";
+                    try{
+                        var command = maConnexion.CreateCommand();
+                        command.CommandText = requete;
+
+                        using var reader = command.ExecuteReader();
+                        var clients = new List<(string IdUtilisateur, string Nom, string Prenom)>();
+                        while (reader.Read()){
+                            string idUtil  = reader.GetString("Id_utilisateur");
+                            string nom     = reader.GetString("Nom");
+                            string prenom  = reader.GetString("Prenom");
+                            clients.Add((idUtil, nom, prenom));
+                        }
+
+                        AnsiConsole.MarkupLine("[bold yellow]Liste des clients :[/]");
+                        foreach (var (id, nom, prenom) in clients){
+                            AnsiConsole.MarkupLine($"[green]ID Utilisateur:[/] {id} [bold]Nom:[/] {nom} [bold]Prénom:[/] {prenom}");
+                        }
+                    }catch (MySqlException e){
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "[red]Retour au menu principal[/]":
                     break;
@@ -947,26 +1007,53 @@ namespace Projet {
                     .Title("[blue]Module de gestion des cuisiniers[/]")
                     .PageSize(10)
                     .AddChoices(
-                        "Ajouter un cuisinier",
-                        "Modifier un cuisinier",
-                        "Supprimer un cuisinier",
                         "Afficher les cuisiniers et leurs plats",
                         "[red]Retour au menu principal[/]")
             );
 
             switch (choix)
             {
-                case "Ajouter un cuisinier":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Ajout d'un cuisinier...");
-                    break;
-                case "Modifier un cuisinier":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Modification d'un cuisinier...");
-                    break;
-                case "Supprimer un cuisinier":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Suppression d'un cuisinier...");
-                    break;
                 case "Afficher les cuisiniers et leurs plats":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Affichage des cuisiniers et de leurs plats...");
+                    string requete = @"SELECT cu.Id_cuisinier, u.Id_utilisateur, u.Nom, u.`Prénom` AS Prenom, p.Id_plat, p.Nom AS PlatNom FROM cuisinier cu JOIN utilisateur u ON cu.Id_utilisateur = u.Id_utilisateur LEFT JOIN plat p ON cu.Id_cuisinier = p.Id_cuisinier ORDER BY u.Nom, u.`Prénom`, p.Nom;";
+
+                    try{
+                        using var command = maConnexion.CreateCommand();
+                        command.CommandText = requete;
+
+                        using var reader = command.ExecuteReader();
+                        var dict = new Dictionary<int, (string Nom, string Prenom, List<(int IdPlat,string PlatNom)> Plats)>();
+
+                        while (reader.Read()){
+                            int idCuisinier = reader.GetInt32("Id_cuisinier");
+                            string nom  = reader.GetString("Nom");
+                            string prenom = reader.GetString("Prenom");
+                            // plat peut être null si aucun
+                            int? idPlat = reader.IsDBNull(reader.GetOrdinal("Id_plat")) ? (int?)null : reader.GetInt32("Id_plat");
+                            string platNom = reader.IsDBNull(reader.GetOrdinal("PlatNom")) ? null : reader.GetString("PlatNom");
+
+                            if (!dict.ContainsKey(idCuisinier))
+                                dict[idCuisinier] = (nom, prenom, new List<(int, string)>());
+
+                            if (idPlat.HasValue)
+                                dict[idCuisinier].Plats.Add((idPlat.Value, platNom));
+                        }
+
+                        reader.Close();
+
+                        AnsiConsole.MarkupLine("[bold yellow]Liste des cuisiniers et de leurs plats :[/]");
+                        foreach (var kv in dict){
+                            var (nom, prenom, plats) = kv.Value;
+                            AnsiConsole.MarkupLine($"\n[underline]{nom} {prenom} (ID cuisinier: {kv.Key})[/]");
+                            if (plats.Count == 0){
+                                AnsiConsole.MarkupLine("  [grey]— Aucun plat proposé[/]");
+                            }else{
+                                foreach (var (idPlat, platNom) in plats)
+                                    AnsiConsole.MarkupLine($"  • [green]{platNom}[/] (ID plat: {idPlat})");
+                            }
+                        }
+                    }catch (MySqlException e){
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "[red]Retour au menu principal[/]":
                     break;
@@ -981,30 +1068,41 @@ namespace Projet {
                     .Title("[blue]Module de gestion des commandes[/]")
                     .PageSize(10)
                     .AddChoices(
-                        "Créer une commande",
-                        "Modifier une commande",
-                        "Supprimer une commande",
-                        "Calculer le prix d'une commande",
-                        "Déterminer le chemin optimal de livraison",
+                        "Afficher la liste des commandes en cours",
                         "[red]Retour au menu principal[/]")
             );
 
             switch (choix)
             {
-                case "Créer une commande":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Création d'une commande...");
-                    break;
-                case "Modifier une commande":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Modification d'une commande...");
-                    break;
-                case "Supprimer une commande":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Suppression d'une commande...");
-                    break;
-                case "Calculer le prix d'une commande":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Calcul du prix d'une commande...");
-                    break;
-                case "Déterminer le chemin optimal de livraison":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Calcul du chemin optimal de livraison...");
+                case "Afficher la liste des commandes en cours":
+                    string requete = @"SELECT co.Id_commande, p.Nom AS PlatNom, ucl.Nom AS ClientNom, ucl.`Prénom` AS ClientPrenom, ucui.Nom AS CuisinierNom, ucui.`Prénom` AS CuisinierPrenom, co.Quantité, co.Date_commande FROM commande co JOIN plat p ON co.Id_plat = p.Id_plat JOIN client cl ON co.Id_client = cl.Id_client JOIN utilisateur ucl ON cl.Id_utilisateur = ucl.Id_utilisateur JOIN cuisinier cui ON co.Id_cuisinier = cui.Id_cuisinier JOIN utilisateur ucui ON cui.Id_utilisateur = ucui.Id_utilisateur WHERE co.Statut = 'active' ORDER BY co.Date_commande DESC;";
+
+                    try{
+                        using var cmd    = maConnexion.CreateCommand();
+                        cmd.CommandText = requete;
+
+                        using var reader = cmd.ExecuteReader();
+                        AnsiConsole.MarkupLine("[bold yellow]Commandes en cours :[/]");
+                        while (reader.Read()){
+                            int    idCmd      = reader.GetInt32("Id_commande");
+                            string platNom    = reader.GetString("PlatNom");
+                            string cliNom     = reader.GetString("ClientNom");
+                            string cliPrenom  = reader.GetString("ClientPrenom");
+                            string cuiNom     = reader.GetString("CuisinierNom");
+                            string cuiPrenom  = reader.GetString("CuisinierPrenom");
+                            int    quantite   = reader.GetInt32("Quantité");
+                            string dateCmd    = reader.GetString("Date_commande");
+
+                            AnsiConsole.MarkupLine(
+                                $"• [green]#{idCmd}[/] {platNom} — " +
+                                $"Client: {cliNom} {cliPrenom}, " +
+                                $"Cuisinier: {cuiNom} {cuiPrenom}, " +
+                                $"Quantité: {quantite}, Date: {dateCmd}");
+                        }
+                        reader.Close();
+                    }catch(MySqlException e) {
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "[red]Retour au menu principal[/]":
                     break;
@@ -1019,30 +1117,76 @@ namespace Projet {
                     .Title("[blue]Module de statistiques[/]")
                     .PageSize(10)
                     .AddChoices(
-                        "Nombre de livraisons par cuisinier",
+                        "Moyenne du nombre de commande par cuisinier",
                         "Commandes par période",
                         "Moyenne des prix des commandes",
-                        "Moyenne des comptes clients",
-                        "Liste des commandes par nationalité des plats",
                         "[red]Retour au menu principal[/]")
             );
 
             switch (choix)
             {
                 case "Nombre de livraisons par cuisinier":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Nombre de livraisons par cuisinier...");
+                    string requete = @"SELECT AVG(nb) FROM (SELECT COUNT(*) AS nb FROM commande GROUP BY Id_cuisinier) AS sub;";
+
+                    try{
+                        var command = maConnexion.CreateCommand();
+                        command.CommandText = requete;
+
+                        // ExecuteScalar renvoie directement la moyenne
+                        object result = command.ExecuteScalar();
+                        double moyenne = result == DBNull.Value ? 0 : Convert.ToDouble(result);
+
+                        AnsiConsole.MarkupLine($"[bold yellow]Moyenne de commandes par cuisinier :[/] [green]{moyenne:F2}[/]");
+                    }catch (MySqlException e){
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "Commandes par période":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Affichage des commandes par période...");
+                    string debutStr = AnsiConsole.Ask<string>("[yellow]Entrez la date de début (jj/MM/aa) :[/]");
+                    string finStr   = AnsiConsole.Ask<string>("[yellow]Entrez la date de fin (jj/MM/aa) :[/]");
+                    requete = $@"SELECT co.Id_commande, p.Nom AS PlatNom, ucl.Nom AS ClientNom, ucl.`Prénom` AS ClientPrenom, ucui.Nom AS CuisinierNom, ucui.`Prénom` AS CuisinierPrenom, co.Quantité, co.Date_commande FROM commande co JOIN plat p ON co.Id_plat = p.Id_plat JOIN client cl ON co.Id_client = cl.Id_client JOIN utilisateur ucl ON cl.Id_utilisateur = ucl.Id_utilisateur JOIN cuisinier cui ON co.Id_cuisinier = cui.Id_cuisinier JOIN utilisateur ucui  ON cui.Id_utilisateur  = ucui.Id_utilisateur WHERE STR_TO_DATE(co.Date_commande, '%d/%m/%y') BETWEEN STR_TO_DATE('{debutStr}', '%d/%m/%y') AND STR_TO_DATE('{finStr}',   '%d/%m/%y') ORDER BY STR_TO_DATE(co.Date_commande, '%d/%m/%y');";
+
+                    try{
+                        using var cmd    = maConnexion.CreateCommand();
+                        cmd.CommandText = requete;
+
+                        using var reader = cmd.ExecuteReader();
+                        AnsiConsole.MarkupLine($"[bold yellow]Commandes du {debutStr} au {finStr} :[/]");
+                        while (reader.Read()){
+                            int    idCmd     = reader.GetInt32("Id_commande");
+                            string platNom   = reader.GetString("PlatNom");
+                            string cliNom    = reader.GetString("ClientNom");
+                            string cliPrenom = reader.GetString("ClientPrenom");
+                            string cuiNom    = reader.GetString("CuisinierNom");
+                            string cuiPrenom = reader.GetString("CuisinierPrenom");
+                            int    quantite  = reader.GetInt32("Quantité");
+                            string dateCmd   = reader.GetString("Date_commande");
+
+                            AnsiConsole.MarkupLine(
+                                $"• [green]#{idCmd}[/] {platNom} — " +
+                                $"Client: {cliNom} {cliPrenom}, " +
+                                $"Cuisinier: {cuiNom} {cuiPrenom}, " +
+                                $"Quantité: {quantite}, Date: {dateCmd}");
+                        }
+                        reader.Close();
+                    }catch (MySqlException e){
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "Moyenne des prix des commandes":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Calcul de la moyenne des prix des commandes...");
-                    break;
-                case "Moyenne des comptes clients":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Calcul de la moyenne des comptes clients...");
-                    break;
-                case "Liste des commandes par nationalité des plats":
-                    AnsiConsole.MarkupLine("[grey][REQUÊTE SQL][/] Liste des commandes par nationalité des plats...");
+                    requete = @"SELECT AVG(Prix) FROM commande;";
+
+                    try{
+                        using var command = maConnexion.CreateCommand();
+                        command.CommandText = requete;
+
+                        object result = command.ExecuteScalar();
+                        double moyenne = result == DBNull.Value ? 0 : Convert.ToDouble(result);
+
+                        AnsiConsole.MarkupLine($"[bold yellow]Moyenne du prix des commandes :[/] [green]{moyenne:F2}[/] €");
+                    }catch (MySqlException e){
+                        AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }
                     break;
                 case "[red]Retour au menu principal[/]":
                     break;
@@ -1051,7 +1195,7 @@ namespace Projet {
         }
         #endregion  
 
-        public void ConstruireGrapheRelations(){
+        public void ConstruireGrapheRelations(bool color){
 
             List<Noeud<string>> noeuds = new List<Noeud<string>>();
             List<Lien<string>> liens = new List<Lien<string>>();
@@ -1168,10 +1312,192 @@ namespace Projet {
                 }
             }
             Graphe<string> grapheRelations = new Graphe<string>(false, noeuds, liens);
-            Bitmap img = grapheRelations.DrawGraphe();
+            Bitmap img;
+            if(color){
+                img = grapheRelations.DrawGrapheColored();
+            }else{
+                img = grapheRelations.DrawGraphe();
+            }
             string path = "graphe_relations.png";
             img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
         }
+    
+        public void ExporterGrapheRelationnelEnXml(string filePath){
+            var noeuds = new List<Noeud<string>>();
+            var liens  = new List<Lien<string>>();
+            var map    = new Dictionary<string, Noeud<string>>();
+            var positionsStations = new Dictionary<int, (double X, double Y)>();
+
+            using (var cmdPos = maConnexion.CreateCommand()){
+                cmdPos.CommandText = "SELECT Id_station, Latitude, Longitude FROM MétroStation;";
+                using var rdPos = cmdPos.ExecuteReader();
+                while (rdPos.Read()){
+                    int id    = rdPos.GetInt32("Id_station");
+                    double lat = rdPos.GetDouble("Latitude");
+                    double lon = rdPos.GetDouble("Longitude");
+                    positionsStations[id] = (lon, lat);
+                }
+            }
+
+            var relations = new List<(string client, string cuisinier)>();
+            using (var cmdRel = maConnexion.CreateCommand()){
+                cmdRel.CommandText = "SELECT Id_client, Id_cuisinier FROM commande;";
+                using var rdRel = cmdRel.ExecuteReader();
+                while (rdRel.Read())
+                    relations.Add((
+                        rdRel.GetInt32("Id_client").ToString(),
+                        rdRel.GetInt32("Id_cuisinier").ToString()
+                    ));
+            }
+
+            var stationClient = new Dictionary<string,int>();
+            using (var cmdC = maConnexion.CreateCommand()){
+                cmdC.CommandText = "SELECT Id_client, Id_station FROM client;";
+                using var rdC = cmdC.ExecuteReader();
+                while (rdC.Read())
+                    stationClient[ rdC.GetInt32("Id_client").ToString() ] = rdC.GetInt32("Id_station");
+            }
+
+            var stationCui = new Dictionary<string,int>();
+            using (var cmdCu = maConnexion.CreateCommand()){
+                cmdCu.CommandText = "SELECT Id_cuisinier, Id_station FROM cuisinier;";
+                using var rdCu = cmdCu.ExecuteReader();
+                while (rdCu.Read())
+                    stationCui[ rdCu.GetInt32("Id_cuisinier").ToString() ] = rdCu.GetInt32("Id_station");
+            }
+
+            foreach (var (cli, cui) in relations){
+                string nomClient = "Client_" + cli;
+                if (!map.ContainsKey(nomClient)){
+                    var (x,y) = stationClient.TryGetValue(cli, out var s) && positionsStations.TryGetValue(s, out var p)
+                               ? p : (0.0,0.0);
+                    var n = new Noeud<string>(map.Count+1, nomClient, x, y);
+                    noeuds.Add(n);
+                    map[nomClient] = n;
+                }
+
+                string nomCui = "Cuisinier_" + cui;
+                if (!map.ContainsKey(nomCui)){
+                    var (x,y) = stationCui.TryGetValue(cui, out var s) && positionsStations.TryGetValue(s, out var p)
+                               ? p : (0.0,0.0);
+                    var n = new Noeud<string>(map.Count+1, nomCui, x, y);
+                    noeuds.Add(n);
+                    map[nomCui] = n;
+                }
+
+                liens.Add(new Lien<string>(map[nomClient], map[nomCui], 1));
+            }
+
+            var doc = new XDocument(
+                new XElement("GrapheRelationnel",
+                    new XElement("Noeuds",
+                        from n in noeuds
+                        select new XElement("Noeud",
+                            new XAttribute("Id",    n.IdNoeud),
+                            new XAttribute("Nom",   n.ValeurNoeud),
+                            new XAttribute("X",     n.CoX),
+                            new XAttribute("Y",     n.CoY)
+                        )
+                    ),
+                    new XElement("Liens",
+                        from l in liens
+                        select new XElement("Lien",
+                            new XAttribute("Depart",  l.Depart.IdNoeud),
+                            new XAttribute("Arrivee", l.Arrivee.IdNoeud),
+                            new XAttribute("Poids",   l.Poids)
+                        )
+                    )
+                )
+            );
+
+            doc.Save(filePath);
+            AnsiConsole.MarkupLine($"[green]Export XML généré : {filePath}[/]");
+        }
+    
+        public void ExporterGrapheRelationnelEnJson(string filePath){
+            var noeuds = new List<object>();
+            var liens  = new List<object>();
+            var map    = new Dictionary<string,int>();
+
+            var positionsStations = new Dictionary<int,(double X,double Y)>();
+            using (var cmd = maConnexion.CreateCommand()){
+                cmd.CommandText = "SELECT Id_station, Latitude, Longitude FROM MétroStation;";
+                using var rd = cmd.ExecuteReader();
+                while(rd.Read()){
+                    int    id  = rd.GetInt32("Id_station");
+                    double lat = rd.GetDouble("Latitude");
+                    double lon = rd.GetDouble("Longitude");
+                    positionsStations[id] = (lon, lat);
+                }
+            }
+
+            var relations = new List<(string cli,string cui)>();
+            using (var cmd = maConnexion.CreateCommand()){
+                cmd.CommandText = "SELECT Id_client, Id_cuisinier FROM commande;";
+                using var rd = cmd.ExecuteReader();
+                while(rd.Read())
+                    relations.Add((
+                        rd.GetInt32("Id_client").ToString(),
+                        rd.GetInt32("Id_cuisinier").ToString()
+                    ));
+            }
+
+            var stationClient = new Dictionary<string,int>();
+            using (var cmd = maConnexion.CreateCommand()){
+                cmd.CommandText = "SELECT Id_client, Id_station FROM client;";
+                using var rd = cmd.ExecuteReader();
+                while(rd.Read())
+                    stationClient[ rd.GetInt32("Id_client").ToString() ]
+                        = rd.GetInt32("Id_station");
+            }
+
+            var stationCuisinier = new Dictionary<string,int>();
+            using (var cmd = maConnexion.CreateCommand()){
+                cmd.CommandText = "SELECT Id_cuisinier, Id_station FROM cuisinier;";
+                using var rd = cmd.ExecuteReader();
+                while(rd.Read())
+                    stationCuisinier[ rd.GetInt32("Id_cuisinier").ToString() ]
+                        = rd.GetInt32("Id_station");
+            }
+
+            foreach (var (cli, cui) in relations){
+                string nomCli = "Client_" + cli;
+                if (!map.ContainsKey(nomCli)){
+                    var (x, y) = positionsStations.TryGetValue(
+                        stationClient.GetValueOrDefault(cli), out var p) ? p : (0.0, 0.0);
+                    int id = map.Count + 1;
+                    map[nomCli] = id;
+                    noeuds.Add(new { Id = id, Nom = nomCli, X = x, Y = y });
+                }
+
+                string nomCui = "Cuisinier_" + cui;
+                if (!map.ContainsKey(nomCui)){
+                    var (x, y) = positionsStations.TryGetValue(
+                        stationCuisinier.GetValueOrDefault(cui), out var p) ? p : (0.0, 0.0);
+                    int id = map.Count + 1;
+                    map[nomCui] = id;
+                    noeuds.Add(new { Id = id, Nom = nomCui, X = x, Y = y });
+                }
+
+                liens.Add(new {
+                    Depart  = map[nomCli],
+                    Arrivee = map[nomCui],
+                    Poids   = 1f
+                });
+            }
+
+            // 3) Sérialisation de l’objet racine, sans DTO
+            var graphe = new {
+                Noeuds = noeuds,
+                Liens  = liens
+            };
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(graphe, options);
+            File.WriteAllText(filePath, json);
+
+            AnsiConsole.MarkupLine($"[green]JSON exporté : {filePath}[/]");
+        }
+
     }
 }

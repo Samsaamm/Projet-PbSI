@@ -484,21 +484,19 @@ namespace Projet{
         }
 
         //Draw graphue couleur
-        /* public Bitmap DrawGraphe(int width = 1920 * 2, int height = 1080 * 2)
+        public Bitmap DrawGrapheColored(int width = 1920 * 2, int height = 1080 * 2)
         {
             Bitmap bitmap = new Bitmap(width, height);
             Dictionary<Noeud<T>, int> couleurs = WelshPowell();
 
-            using (Graphics g = Graphics.FromImage(bitmap))
-            {
+            using (Graphics g = Graphics.FromImage(bitmap)){
                 g.Clear(System.Drawing.Color.White);
                 Pen pen = new Pen(System.Drawing.Color.Black, 2);
                 Font font = new Font("Arial", 10);
                 Brush brushTexte = Brushes.Black;
 
                 Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
-                foreach (Noeud<T> noeud in noeuds)
-                {
+                foreach (Noeud<T> noeud in noeuds){
                     double x = noeud.CoX;
                     double y = noeud.CoY;
                     positions[noeud.IdNoeud] = new double[] { x, y };
@@ -506,43 +504,34 @@ namespace Projet{
 
                 Dictionary<int, Point> cartPositions = CooCartesienne(positions, width - 50, height - 50);
 
-                foreach (Lien<T> lien in liens)
-                {
+                foreach (Lien<T> lien in liens){
                     Point d = cartPositions[lien.Depart.IdNoeud - 1];
                     d.Y = height - d.Y;
                     Point a = cartPositions[lien.Arrivee.IdNoeud - 1];
                     a.Y = height - a.Y;
 
-                    if (isOriented)
-                    {
+                    if (isOriented){
                         DrawArrow(g, pen, d, a);
-                    }
-                    else
-                    {
+                    }else{
                         g.DrawLine(pen, d, a);
                     }
                 }
 
-                foreach (Noeud<T> noeud in noeuds)
-                {
+                foreach (Noeud<T> noeud in noeuds){
                     Point pos = cartPositions[noeud.IdNoeud - 1];
                     pos.Y = height - pos.Y;
 
                     Brush brush = Brushes.Gray;
-                    if (couleurs.ContainsKey(noeud))
-                    {
+                    if (couleurs.ContainsKey(noeud)){
                         brush = GetColorFromInt(couleurs[noeud]);
                     }
 
                     g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
                     g.DrawEllipse(Pens.Black, pos.X - 10, pos.Y - 10, 20, 20);
 
-                    if (noeud.ValeurNoeud != null)
-                    {
+                    if (noeud.ValeurNoeud != null){
                         g.DrawString(noeud.ValeurNoeud.ToString(), font, brushTexte, pos.X + 12, pos.Y - 10);
-                    }
-                    else
-                    {
+                    }else{
                         g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
                     }
                 }
@@ -550,7 +539,7 @@ namespace Projet{
 
             this.map = bitmap;
             return bitmap;
-        } */
+        }
         public Brush GetColorFromInt(int i)
         {
             System.Drawing.Color[] couleurs = new System.Drawing.Color[]

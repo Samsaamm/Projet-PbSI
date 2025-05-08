@@ -7,6 +7,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using Org.BouncyCastle.Crypto.Prng;
+using Spectre.Console;
 
 namespace Projet{
     public class Graphe<T>{
@@ -107,12 +108,29 @@ namespace Projet{
                 int noeud = i + 1;
                 res[noeud] = new List<int>();
                 for(int j = 0; j < matrice_adj.GetLength(1); j++){
-                    if(matrice_adj[i, j] == 1){
+                    if(matrice_adj[i, j] != 0){
                         res[noeud].Add(j + 1);
                     }
                 }
             }
             return res;
+        }
+
+        public void ModifiateAdj(int idnoeud1, int idnoeud2, int poids){
+            bool update = false;
+            Console.WriteLine(idnoeud1 + "   " + idnoeud2);
+            foreach(Lien<T> l in this.liens){
+                if((l.Depart.IdNoeud == idnoeud1 && l.Arrivee.IdNoeud == idnoeud2) || (l.Depart.IdNoeud == idnoeud2 && l.Arrivee.IdNoeud == idnoeud1)){
+                    l.Poids = poids;
+                    this.matrice_adj = CreateMatriceAdj(this.noeuds, this.liens, this.isOriented);
+                    this.liste_adj = CreateListeAdj(this.matrice_adj);
+                    update = true;
+                }
+            }
+
+            if(!update){
+                AnsiConsole.MarkupLine("[red]Aucune liaison n'a été trouver avec cette station de départ et d'arrivé[/]");
+            }
         }
 
         /// <summary>
@@ -392,7 +410,7 @@ namespace Projet{
                 map = DrawGraphe();
             }
             using(Graphics g = Graphics.FromImage(map)){
-                Pen pen = new Pen(Color.Red, 3);
+                Pen pen = new Pen(System.Drawing.Color.Red, 3);
                 Font font = new Font("Arial", 10);
 
                 Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
@@ -425,56 +443,56 @@ namespace Projet{
         /// <param name="width">largeur de l'image</param>
         /// <param name="height">hauteur de l'image</param>
         /// <returns>renvoie le plans sous forme de Bitmap</returns>
-        //public Bitmap DrawGraphe(int width = 1920*2, int height = 1080*2){
-        //    Bitmap bitmap= new Bitmap(width, height);
-        //    using(Graphics g = Graphics.FromImage(bitmap)){
-        //        g.Clear(Color.White);
-        //        Pen pen = new Pen(Color.Black, 2);
-        //        Font font = new Font("Arial", 10);
-        //        Brush brush = Brushes.Black;
-        //        Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
-        //        foreach(var noeud in noeuds){
-        //            double x = noeud.CoX;
-        //            double y = noeud.CoY;
-        //            positions[noeud.IdNoeud] = [x, y];
-        //        }
-        //        Dictionary<int, Point> CartPositions = CooCartesienne(positions, width - 50, height - 50);
-        //        foreach(var noeud in noeuds){
-        //            Point pos = CartPositions[noeud.IdNoeud - 1];
-        //            pos.Y = height - pos.Y;
-        //            g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
-        //            if(noeud.ValeurNoeud != null){
-        //                g.DrawString(noeud.ValeurNoeud.ToString(), font, brush, pos.X, pos.Y - 25);
-        //            }else{
-        //                g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
-        //            }
-        //        }
-        //        foreach(var lien in liens){
-        //            Point d = CartPositions[lien.Depart.IdNoeud - 1];
-        //            d.Y = height - d.Y;
-        //            Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
-        //            a.Y = height - a.Y;
-        //            if(isOriented){
-        //                DrawArrow(g, pen, d, a);
-        //            }else{
-        //                g.DrawLine(pen, d, a);
-        //            }
-        //        }
-        //    }
-        //    this.map = bitmap;
-        //    return bitmap;
-        //}
+        public Bitmap DrawGraphe(int width = 1920*2, int height = 1080*2){
+            Bitmap bitmap= new Bitmap(width, height);
+            using(Graphics g = Graphics.FromImage(bitmap)){
+                g.Clear(System.Drawing.Color.White);
+                Pen pen = new Pen(System.Drawing.Color.Black, 2);
+                Font font = new Font("Arial", 10);
+                Brush brush = Brushes.Black;
+                Dictionary<int, double[]> positions = new Dictionary<int, double[]>();
+                foreach(var noeud in noeuds){
+                    double x = noeud.CoX;
+                    double y = noeud.CoY;
+                    positions[noeud.IdNoeud] = [x, y];
+                }
+                Dictionary<int, Point> CartPositions = CooCartesienne(positions, width - 50, height - 50);
+                foreach(var noeud in noeuds){
+                    Point pos = CartPositions[noeud.IdNoeud - 1];
+                    pos.Y = height - pos.Y;
+                    g.FillEllipse(brush, pos.X - 10, pos.Y - 10, 20, 20);
+                    if(noeud.ValeurNoeud != null){
+                        g.DrawString(noeud.ValeurNoeud.ToString(), font, brush, pos.X, pos.Y - 25);
+                    }else{
+                        g.DrawString("Null", font, Brushes.Red, pos.X, pos.Y - 15);
+                    }
+                }
+                foreach(var lien in liens){
+                    Point d = CartPositions[lien.Depart.IdNoeud - 1];
+                    d.Y = height - d.Y;
+                    Point a = CartPositions[lien.Arrivee.IdNoeud - 1];
+                    a.Y = height - a.Y;
+                    if(isOriented){
+                        DrawArrow(g, pen, d, a);
+                    }else{
+                        g.DrawLine(pen, d, a);
+                    }
+                }
+            }
+            this.map = bitmap;
+            return bitmap;
+        }
 
         //Draw graphue couleur
-        public Bitmap DrawGraphe(int width = 1920 * 2, int height = 1080 * 2)
+        /* public Bitmap DrawGraphe(int width = 1920 * 2, int height = 1080 * 2)
         {
             Bitmap bitmap = new Bitmap(width, height);
             Dictionary<Noeud<T>, int> couleurs = WelshPowell();
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.White);
-                Pen pen = new Pen(Color.Black, 2);
+                g.Clear(System.Drawing.Color.White);
+                Pen pen = new Pen(System.Drawing.Color.Black, 2);
                 Font font = new Font("Arial", 10);
                 Brush brushTexte = Brushes.Black;
 
@@ -532,13 +550,13 @@ namespace Projet{
 
             this.map = bitmap;
             return bitmap;
-        }
+        } */
         public Brush GetColorFromInt(int i)
         {
-            Color[] couleurs = new Color[]
+            System.Drawing.Color[] couleurs = new System.Drawing.Color[]
             {
-        Color.Blue, Color.Red, Color.Green, Color.Orange, Color.Purple,
-        Color.Cyan, Color.Magenta, Color.Brown, Color.Teal, Color.DarkGray
+                System.Drawing.Color.Blue, System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Orange, System.Drawing.Color.Purple,
+                System.Drawing.Color.Cyan, System.Drawing.Color.Magenta, System.Drawing.Color.Brown, System.Drawing.Color.Teal, System.Drawing.Color.DarkGray
             };
 
             return new SolidBrush(couleurs[i % couleurs.Length]);

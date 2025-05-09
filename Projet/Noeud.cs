@@ -39,24 +39,43 @@ namespace Projet{
             this.coY = Y;
         }
 
+        /// <summary>
+        /// propriété Idnoeud
+        /// </summary>
         public int IdNoeud{
             get{ return this.idNoeud;}
             set{ this.idNoeud = value;}
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
         public T ValeurNoeud{
             get{ return this.valeurNoeud;}
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
         public double CoX{
             get{ return this.coX;}
             set{ this.coX = value;}
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public double CoY{
             get{ return this.coY;}
             set{ this.coY = value;}
         }
+
+        /// <summary>
+        /// méthode pour savoir si deux noeuds sont les mêmes
+        /// </summary>
+        /// <param name="n2">noeud a vérifier</param>
+        /// <returns>si les noeuds sont les mêmes</returns>
 
         public bool Equals(Noeud<T> n2){
             bool res = false;
@@ -65,6 +84,11 @@ namespace Projet{
             }
             return res;
         }
+
+        /// <summary>
+        /// affichage des caractéristiques du noeud
+        /// </summary>
+        /// <returns>l'identifiant du noeud</returns>
 
         public override string ToString()
         {

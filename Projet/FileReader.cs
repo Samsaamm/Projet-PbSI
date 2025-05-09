@@ -20,13 +20,12 @@ namespace Projet{
                     SReader = new StreamReader(filepath);
                     string? line;
                     while((line = SReader.ReadLine()) != null){
-                        if(line[0] != '%'){ //Supression des lignes de commentaire
+                        if(line[0] != '%'){
                             File.Add(line);
                         }
                     }
                     for(int i = 0; i < Convert.ToInt32(File[0].Split(' ')[0]); i++){
-                        noeuds.Add(new Noeud<T>(i + 1, (T)Convert.ChangeType(i + 1, typeof(T)))); //Prompt IA utilisé :
-                        // Comment garder T générique tout en lui assignant un type int ?
+                        noeuds.Add(new Noeud<T>(i + 1, (T)Convert.ChangeType(i + 1, typeof(T))));
                     } 
                     for(int i = 1; i < File.Count; i++){
                         string[] data = File[i].Split(' ');
@@ -78,9 +77,17 @@ namespace Projet{
             }
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public List<Noeud<T>> Noeuds{
             get{ return noeuds;}
         }
+
+        /// <summary>
+        /// propriété
+        /// </summary>
 
         public List<Lien<T>> Liens{
             get{ return liens;}

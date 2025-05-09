@@ -50,17 +50,33 @@ namespace Projet{
             
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public List<Noeud<T>> Noeuds{
             get{ return this.noeuds;}
         }
+
+        /// <summary>
+        /// propriété
+        /// </summary>
 
         public List<Lien<T>> Liens{
             get{ return this.liens;}
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public float[,] Matrice_adj{
             get{ return this.matrice_adj;}
         }
+
+        /// <summary>
+        /// propriété
+        /// </summary>
 
         public Dictionary<int, List<int>> Liste_adj{
             get { return this.liste_adj;}
@@ -115,6 +131,13 @@ namespace Projet{
             }
             return res;
         }
+
+        /// <summary>
+        /// modification possible de la matrice d'adj si par exemple l'administrateur veut ajouter un retard entre deux stations
+        /// </summary>
+        /// <param name="idnoeud1">station de départ pour le retard</param>
+        /// <param name="idnoeud2">station d'arrivée pour le retard</param>
+        /// <param name="poids">poids entre les deux stations</param>
 
         public void ModifiateAdj(int idnoeud1, int idnoeud2, int poids){
             bool update = false;
@@ -436,7 +459,6 @@ namespace Projet{
         }
 
 
-        //DRAW Graphe sans couleur
         /// <summary>
         /// Dessine le plans du graphe
         /// </summary>
@@ -483,7 +505,13 @@ namespace Projet{
             return bitmap;
         }
 
-        //Draw graphue couleur
+        /// <summary>
+        /// dessin du graphe coloré
+        /// </summary>
+        /// <param name="width">largeur</param>
+        /// <param name="height">hauteur</param>
+        /// <returns>le graphe coloré</returns>
+
         public Bitmap DrawGrapheColored(int width = 1920 * 2, int height = 1080 * 2)
         {
             Bitmap bitmap = new Bitmap(width, height);
@@ -540,6 +568,12 @@ namespace Projet{
             this.map = bitmap;
             return bitmap;
         }
+
+        /// <summary>
+        /// tableau pour le pinceau de couleur
+        /// </summary>
+        /// <param name="i">indice de la couleur dans le tableau</param>
+        /// <returns>un pinceau avec la couleur choisie </returns>
         public Brush GetColorFromInt(int i)
         {
             System.Drawing.Color[] couleurs = new System.Drawing.Color[]
@@ -569,7 +603,6 @@ namespace Projet{
             int yMax = int.MinValue;
             int yMin = int.MaxValue;
             foreach(var (i, pos) in positions){
-                //Ici, on utilise la projection de mercator https://fr.wikipedia.org/wiki/Projection_de_Mercator
                 double x = R * pos[0] * Math.PI / 180 % 100 * 10;
                 double y = R * Math.Log(Math.Tan(Math.PI / 4 + pos[1] * Math.PI / 180 / 2)) % 100 * 10;
                 if(x > xMax){
@@ -606,6 +639,11 @@ namespace Projet{
             pen.CustomEndCap = arrowCap;
             g.DrawLine(pen, start, end);
         }
+
+        /// <summary>
+        /// algorithme de welsh powell
+        /// </summary>
+        /// <returns>un dictionnaire avec chaque couleur pour chaque noeud</returns>
         public Dictionary<Noeud<T>, int> WelshPowell()
         {
             Dictionary<Noeud<T>, int> couleurs = new Dictionary<Noeud<T>, int>();
@@ -654,6 +692,11 @@ namespace Projet{
 
             return couleurs;
         }
+
+        /// <summary>
+        /// savoir si un graphe est biparti
+        /// </summary>
+        /// <returns>si le graphe est biparti</returns>
         public bool EstBiparti()
         {
             Dictionary<Noeud<T>, int> couleurs = WelshPowell();
@@ -667,6 +710,11 @@ namespace Projet{
                 return false;
             }
         }
+
+        /// <summary>
+        /// les groupes de noeuds par couleurs
+        /// </summary>
+        /// <returns>un dictionnaire avec pour chaque couleur, tous les noeuds à l'intérieur</returns>
         public Dictionary<int, List<Noeud<T>>> GroupesIndependants()
         {
             Dictionary<Noeud<T>, int> couleurs = WelshPowell();

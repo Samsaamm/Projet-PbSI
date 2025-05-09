@@ -19,10 +19,19 @@ namespace Projet {
         private MySqlConnection? maConnexion;
         private Graphe<T> Metro;
 
+        /// <summary>
+        /// constructeur de la classe
+        /// </summary>
+        /// <param name="Metro">graphe des métros</param>
+
         public InterfaceV2(Graphe<T> Metro){
             this.Metro = Metro;
             Run();
         }
+
+        /// <summary>
+        /// lancement de la console et de l'interface de connexion
+        /// </summary>
 
         public void Run(){
             while(true){
@@ -217,6 +226,11 @@ namespace Projet {
             Metro.Distance(Metro.Noeuds[res - 1], Metro.Noeuds[res2 - 1]);
         }
 
+        /// <summary>
+        /// savoir si la connexion est réussie ou pas 
+        /// </summary>
+        /// <param name="connexionString">connexion</param>
+
         public void Connexion(string connexionString){
             try{
                 maConnexion = new MySqlConnection(connexionString);
@@ -227,6 +241,10 @@ namespace Projet {
                 Environment.Exit(1);
             }
         }
+
+        /// <summary>
+        /// Menu pour le client
+        /// </summary>
 
         public void MenuClient(){
             while(true){
@@ -249,6 +267,10 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// menu pour le cuisinier
+        /// </summary>
+
         public void MenuCuisinier(){
             AnsiConsole.MarkupLine("[bold yellow]=== Cuisinier ===[/]");
             var choix = AnsiConsole.Prompt(
@@ -268,6 +290,10 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// connexion pour le developpeur
+        /// </summary>
+
         public void ConnexionDev(){
             var essai = AnsiConsole.Prompt(
                 new TextPrompt<string>("[yellow]Entrez le mot de passe :[/]")
@@ -281,6 +307,12 @@ namespace Projet {
                 AnsiConsole.MarkupLine("[red]Mot de passe invalide[/]");
             }
         }
+
+        /// <summary>
+        /// permet de mettre tous les caractères en forme pour comprendre, peu importe ce que la personne rentre en console (accent ou pas)
+        /// </summary>
+        /// <param name="texte">texte a modifier</param>
+        /// <returns>le texte nettoyé</returns>
 
         private string Nettoyer(string texte) {
             return texte
@@ -340,6 +372,11 @@ namespace Projet {
                 AnsiConsole.MarkupLine("[red]Erreur lors de l'insertion dans la table client/cuisinier :[/] " + e);
             }
         }
+
+        /// <summary>
+        /// Permet a un client de se connecter
+        /// </summary>
+        /// <param name="client">client qui veut se connecter</param>
     
         public void Connexion(bool client)
         {
@@ -408,6 +445,10 @@ namespace Projet {
 
         #region ModeClient
 
+        /// <summary>
+        /// permet de voir les plats
+        /// </summary>
+        /// <param name="ID">identifiant</param>
         public void SeePlat(int ID){
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Liste des plats disponibles :[/]");
@@ -477,6 +518,11 @@ namespace Projet {
                 AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
             }
         }
+
+        /// <summary>
+        /// permet de voir la commande
+        /// </summary>
+        /// <param name="ID">identifiant</param>
 
         public void SeeCommande(int ID)
         {
@@ -559,6 +605,11 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// affichage console du module client
+        /// </summary>
+        /// <param name="IDClient">identifiant du client</param>
+
         public void ModeClient(int IDClient)
         {
             while (true)
@@ -607,6 +658,10 @@ namespace Projet {
 
         #region ModeCuisinier
 
+        /// <summary>
+        /// inserer un plat
+        /// </summary>
+        /// <param name="ID">identifiant</param>
         public void InsererPlat(int ID){
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Ajouter un nouveau plat[/]");
@@ -647,6 +702,11 @@ namespace Projet {
                 AnsiConsole.MarkupLine($"[red]Erreur inattendue :[/] {e.Message}");
             }
         }
+
+        /// <summary>
+        /// gerer les plats
+        /// </summary>
+        /// <param name="ID">identifiants</param>
 
         public void GererPlat(int ID){
             AnsiConsole.Clear();
@@ -708,24 +768,29 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// gerer les commmandes 
+        /// </summary>
+        /// <param name="ID">identifiant</param>
+
         public void GererCommande(int ID){
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[bold yellow]Vos commandes en cours :[/]");
-        
+
             string req1 = $"SELECT Id_plat, Id_commande FROM Commande WHERE Id_cuisinier = {ID} AND Statut = \"active\";";
             string[] res1 = Requete(req1);
-        
+
             var res2 = new List<string[]>();
             for (int i = 0; i < res1.Length / 2; i++){
                 string req2 = $"SELECT Nom FROM Plat WHERE Id_plat = {res1[i * 2]};";
                 res2.Add(Requete(req2));
             }
-        
+
             if (res2.Count == 0){
                 AnsiConsole.MarkupLine("[red]Aucune commande en cours.[/]");
                 return;
             }
-        
+
             var noms = res2.Select(r => r[0]).Concat(new[] { "[red]Quitter[/]" }).ToArray();
             var choixCommande = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -734,19 +799,19 @@ namespace Projet {
             );
             if (choixCommande == "[red]Quitter[/]")
                 return;
-        
+
             int rang = res2.FindIndex(r => r[0] == choixCommande);
             string req3 = $"SELECT * FROM Commande WHERE Id_commande = {res1[rang * 2 + 1]};";
             string[] res3 = Requete(req3);
-        
+
             AnsiConsole.MarkupLine($"[bold]Nom plat :[/] {res2[rang][0]}\n[bold]Quantité :[/] {res3[4]}\n[bold]Date commande :[/] {res3[5]}\n[bold]Prix :[/] {res3[6]}\n");
-        
+
             var choixAction = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[green]Que souhaitez-vous faire ?[/]")
                     .AddChoices("Voir le trajet", "Supprimer la commande", "[red]Retour[/]")
             );
-        
+
             switch (choixAction){
                 case "Voir le trajet":
                     AfficherTrajet(ID, Convert.ToInt32(res3[1]));
@@ -777,6 +842,11 @@ namespace Projet {
                     break;
             }
         }
+
+        /// <summary>
+        /// affichage console du mode cuisinier
+        /// </summary>
+        /// <param name="IDCuisinier">identifiant du cuisinier</param>
 
         public void ModeCuisinier(int IDCuisinier)
         {
@@ -825,6 +895,10 @@ namespace Projet {
 
 
         #region ModeDev
+
+        /// <summary>
+        /// affichage console du mode developpeur
+        /// </summary>
         public void ModeDev(){
             while (true){
                 var choix = AnsiConsole.Prompt(
@@ -868,6 +942,10 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// affichage console pour le graphe relationnel
+        /// </summary>
+
         private void ModuleGrapheRelationnel(){
             while (true){
                 var choix = AnsiConsole.Prompt(
@@ -903,6 +981,10 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// affichage console pour le réseau
+        /// </summary>
+
         private void ModuleReseau(){
             var station1 = AnsiConsole.Ask<string>("[yellow]Entrez le nom de la station de départ de la liaison sur laquelle vous souhaitez ajouté un retard[/]");
 
@@ -928,6 +1010,10 @@ namespace Projet {
 
             Metro.ModifiateAdj(idStation1, idStation2, retard);
         }
+
+        /// <summary>
+        /// affichage console pour le module client
+        /// </summary>
 
         private void ModuleClient()
         {
@@ -1000,6 +1086,10 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// affichage console pour le module cuisinier
+        /// </summary>
+
         private void ModuleCuisinier()
         {
             var choix = AnsiConsole.Prompt(
@@ -1027,7 +1117,7 @@ namespace Projet {
                             int idCuisinier = reader.GetInt32("Id_cuisinier");
                             string nom  = reader.GetString("Nom");
                             string prenom = reader.GetString("Prenom");
-                            // plat peut être null si aucun
+                            
                             int? idPlat = reader.IsDBNull(reader.GetOrdinal("Id_plat")) ? (int?)null : reader.GetInt32("Id_plat");
                             string platNom = reader.IsDBNull(reader.GetOrdinal("PlatNom")) ? null : reader.GetString("PlatNom");
 
@@ -1060,6 +1150,10 @@ namespace Projet {
                 default: break;
             }
         }
+
+        /// <summary>
+        /// affichage console pour la gestion des commandes
+        /// </summary>
 
         private void ModuleCommande()
         {
@@ -1110,6 +1204,9 @@ namespace Projet {
             }
         }
 
+        /// <summary>
+        /// affichage console pour le module statistiques
+        /// </summary>
         private void ModuleStatistiques()
         {
             var choix = AnsiConsole.Prompt(
@@ -1118,22 +1215,21 @@ namespace Projet {
                     .PageSize(10)
                     .AddChoices(
                         "Moyenne du nombre de commande par cuisinier",
-                        "Commandes par période",
+                        "Commandes pour un jour",
                         "Moyenne des prix des commandes",
                         "[red]Retour au menu principal[/]")
             );
 
             switch (choix)
             {
-                case "Nombre de livraisons par cuisinier":
+                case "Moyenne du nombre de commande par cuisinier":
                     string requete = @"SELECT AVG(nb) FROM (SELECT COUNT(*) AS nb FROM commande GROUP BY Id_cuisinier) AS sub;";
 
                     try{
-                        var command = maConnexion.CreateCommand();
-                        command.CommandText = requete;
+                        var commande = maConnexion.CreateCommand();
+                        commande.CommandText = requete;
 
-                        // ExecuteScalar renvoie directement la moyenne
-                        object result = command.ExecuteScalar();
+                        object result = commande.ExecuteScalar();
                         double moyenne = result == DBNull.Value ? 0 : Convert.ToDouble(result);
 
                         AnsiConsole.MarkupLine($"[bold yellow]Moyenne de commandes par cuisinier :[/] [green]{moyenne:F2}[/]");
@@ -1141,46 +1237,49 @@ namespace Projet {
                         AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
                     }
                     break;
-                case "Commandes par période":
-                    string debutStr = AnsiConsole.Ask<string>("[yellow]Entrez la date de début (jj/MM/aa) :[/]");
-                    string finStr   = AnsiConsole.Ask<string>("[yellow]Entrez la date de fin (jj/MM/aa) :[/]");
-                    requete = $@"SELECT co.Id_commande, p.Nom AS PlatNom, ucl.Nom AS ClientNom, ucl.`Prénom` AS ClientPrenom, ucui.Nom AS CuisinierNom, ucui.`Prénom` AS CuisinierPrenom, co.Quantité, co.Date_commande FROM commande co JOIN plat p ON co.Id_plat = p.Id_plat JOIN client cl ON co.Id_client = cl.Id_client JOIN utilisateur ucl ON cl.Id_utilisateur = ucl.Id_utilisateur JOIN cuisinier cui ON co.Id_cuisinier = cui.Id_cuisinier JOIN utilisateur ucui  ON cui.Id_utilisateur  = ucui.Id_utilisateur WHERE STR_TO_DATE(co.Date_commande, '%d/%m/%y') BETWEEN STR_TO_DATE('{debutStr}', '%d/%m/%y') AND STR_TO_DATE('{finStr}',   '%d/%m/%y') ORDER BY STR_TO_DATE(co.Date_commande, '%d/%m/%y');";
+                case "Commandes pour un jour":
+                    var dateStr = AnsiConsole.Ask<string>("[yellow]Entrez la date des commandes à afficher (jj/mm/aa) :[/]");
 
+                    string req = $"SELECT Id_commande, Id_cuisinier, Id_client, Id_plat, Quantité, Date_commande, Prix, Statut " + $"FROM Commande " + $"WHERE Date_commande = '{dateStr}';";
+                
+                    var command = maConnexion.CreateCommand();
+                    command.CommandText = req;
+                
                     try{
-                        using var cmd    = maConnexion.CreateCommand();
-                        cmd.CommandText = requete;
-
-                        using var reader = cmd.ExecuteReader();
-                        AnsiConsole.MarkupLine($"[bold yellow]Commandes du {debutStr} au {finStr} :[/]");
-                        while (reader.Read()){
-                            int    idCmd     = reader.GetInt32("Id_commande");
-                            string platNom   = reader.GetString("PlatNom");
-                            string cliNom    = reader.GetString("ClientNom");
-                            string cliPrenom = reader.GetString("ClientPrenom");
-                            string cuiNom    = reader.GetString("CuisinierNom");
-                            string cuiPrenom = reader.GetString("CuisinierPrenom");
-                            int    quantite  = reader.GetInt32("Quantité");
-                            string dateCmd   = reader.GetString("Date_commande");
-
-                            AnsiConsole.MarkupLine(
-                                $"• [green]#{idCmd}[/] {platNom} — " +
-                                $"Client: {cliNom} {cliPrenom}, " +
-                                $"Cuisinier: {cuiNom} {cuiPrenom}, " +
-                                $"Quantité: {quantite}, Date: {dateCmd}");
+                        using var reader = command.ExecuteReader();
+                        if (!reader.HasRows){
+                            AnsiConsole.MarkupLine("[red]Aucune commande trouvée pour cette date.[/]");
+                            return;
                         }
-                        reader.Close();
+                
+                        AnsiConsole.MarkupLine($"[bold green]Commandes du {dateStr} :[/]");
+                        while (reader.Read()){
+                            var idCom   = reader.GetInt32("Id_commande");
+                            var idCu   = reader.GetInt32("Id_cuisinier");
+                            var idCl   = reader.GetInt32("Id_client");
+                            var idPl   = reader.GetInt32("Id_plat");
+                            var qte    = reader.GetInt32("Quantité");
+                            var prix   = reader.GetDouble("Prix");
+                            var statut = reader.GetString("Statut");
+                
+                            AnsiConsole.MarkupLine(
+                                $"• [blue]Commande #{idCom}[/] – Cuisinier : {idCu}, Client : {idCl}, Plat : {idPl}, Qté : {qte}, Prix : {prix}€, Statut : {statut}"
+                            );
+                        }
                     }catch (MySqlException e){
                         AnsiConsole.MarkupLine($"[red]Erreur SQL :[/] {e.Message}");
+                    }finally{
+                        command.Dispose();
                     }
                     break;
                 case "Moyenne des prix des commandes":
                     requete = @"SELECT AVG(Prix) FROM commande;";
 
                     try{
-                        using var command = maConnexion.CreateCommand();
-                        command.CommandText = requete;
+                        using var commande = maConnexion.CreateCommand();
+                        commande.CommandText = requete;
 
-                        object result = command.ExecuteScalar();
+                        object result = commande.ExecuteScalar();
                         double moyenne = result == DBNull.Value ? 0 : Convert.ToDouble(result);
 
                         AnsiConsole.MarkupLine($"[bold yellow]Moyenne du prix des commandes :[/] [green]{moyenne:F2}[/] €");
@@ -1195,6 +1294,10 @@ namespace Projet {
         }
         #endregion  
 
+        /// <summary>
+        /// construire les graphes des relations
+        /// </summary>
+        /// <param name="color">couleur du graphe</param>
         public void ConstruireGrapheRelations(bool color){
 
             List<Noeud<string>> noeuds = new List<Noeud<string>>();
@@ -1322,6 +1425,11 @@ namespace Projet {
             img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
         }
+
+        /// <summary>
+        /// exporter le graphe relationnel en xml
+        /// </summary>
+        /// <param name="filePath">chemin du fichier</param>
     
         public void ExporterGrapheRelationnelEnXml(string filePath){
             var noeuds = new List<Noeud<string>>();
@@ -1414,7 +1522,11 @@ namespace Projet {
             doc.Save(filePath);
             AnsiConsole.MarkupLine($"[green]Export XML généré : {filePath}[/]");
         }
-    
+
+        /// <summary>
+        /// exporter le graphe en Json
+        /// </summary>
+        /// <param name="filePath">chemin du fichier</param>
         public void ExporterGrapheRelationnelEnJson(string filePath){
             var noeuds = new List<object>();
             var liens  = new List<object>();
@@ -1487,7 +1599,6 @@ namespace Projet {
                 });
             }
 
-            // 3) Sérialisation de l’objet racine, sans DTO
             var graphe = new {
                 Noeuds = noeuds,
                 Liens  = liens

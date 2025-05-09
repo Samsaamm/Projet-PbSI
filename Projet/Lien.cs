@@ -22,17 +22,29 @@ namespace Projet{
             this.poids = poid;
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public Noeud<T> Depart
         {
             get { return depart; }
             set { this.depart = value; }
         }
 
+        /// <summary>
+        /// propriété
+        /// </summary>
+
         public Noeud<T> Arrivee
         {
             get { return arrivee; }
             set { arrivee = value; }
         }
+
+        /// <summary>
+        /// propriété
+        /// </summary>
 
         public float Poids
         {

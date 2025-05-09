@@ -1,4 +1,4 @@
-﻿namespace Projet
+﻿namespace Projet_Sarah_Maxence_Samuel
 {
     [TestClass]
     public class Test1
